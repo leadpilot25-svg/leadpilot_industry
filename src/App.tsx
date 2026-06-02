@@ -4,7 +4,7 @@ import {
   Navigate,
 } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
-import { ProtectedRoute } from './components/auth/ProtectedRoute'
+import { ProtectedRoute, IndustryRoute } from './components/auth/ProtectedRoute'
 import { LoginPage } from './pages/auth/LoginPage'
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage'
 import { ResetPasswordPage } from './pages/auth/ResetPasswordPage'
@@ -59,13 +59,43 @@ const router = createBrowserRouter([
       { path: '/leads/:id/edit',     element: <EditLeadPage />     },
       { path: '/followups',          element: <FollowupsPage />    },
       { path: '/pipeline',           element: <PipelinePage />     },
-      { path: '/industry/travel',    element: <TravelWorkspace />   },
-      { path: '/industry/taxi',      element: <TaxiWorkspace />     },
-      { path: '/industry/insurance', element: <InsuranceWorkspace /> },
-      { path: '/industry/education', element: <EducationWorkspace /> },
-      { path: '/industry/marketing', element: <MarketingWorkspace /> },
-      { path: '/industry/tarot',     element: <TarotWorkspace />    },
-      { path: '/industry/coaching',  element: <CoachingWorkspace /> },
+      // Industry workspace routes — each wrapped in IndustryRoute which
+      // redirects to /dashboard if the tenant's business_type does not match.
+      {
+        path: '/industry/travel',
+        element: <IndustryRoute industry="travel" />,
+        children: [{ index: true, element: <TravelWorkspace /> }],
+      },
+      {
+        path: '/industry/taxi',
+        element: <IndustryRoute industry="taxi" />,
+        children: [{ index: true, element: <TaxiWorkspace /> }],
+      },
+      {
+        path: '/industry/insurance',
+        element: <IndustryRoute industry="insurance" />,
+        children: [{ index: true, element: <InsuranceWorkspace /> }],
+      },
+      {
+        path: '/industry/education',
+        element: <IndustryRoute industry="education" />,
+        children: [{ index: true, element: <EducationWorkspace /> }],
+      },
+      {
+        path: '/industry/marketing',
+        element: <IndustryRoute industry="marketing" />,
+        children: [{ index: true, element: <MarketingWorkspace /> }],
+      },
+      {
+        path: '/industry/tarot',
+        element: <IndustryRoute industry="tarot" />,
+        children: [{ index: true, element: <TarotWorkspace /> }],
+      },
+      {
+        path: '/industry/coaching',
+        element: <IndustryRoute industry="coach" />,
+        children: [{ index: true, element: <CoachingWorkspace /> }],
+      },
     ],
   },
 

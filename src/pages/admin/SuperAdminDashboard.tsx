@@ -34,10 +34,10 @@ function AdminStatCard({
   loading: boolean
 }) {
   const colors = {
-    teal:  { bg: 'rgba(16,185,129,0.1)',  border: 'rgba(16,185,129,0.22)',  text: '#10B981',  top: '#10B981'  },
-    blue:  { bg: 'rgba(99,102,241,0.1)',  border: 'rgba(99,102,241,0.22)',  text: '#818CF8',  top: '#818CF8'  },
-    amber: { bg: 'rgba(251,191,36,0.08)', border: 'rgba(251,191,36,0.2)',   text: '#FCD34D',  top: '#FBBF24'  },
-    rose:  { bg: 'rgba(251,113,133,0.08)',border: 'rgba(251,113,133,0.2)',  text: '#FDA4AF',  top: '#FB7185'  },
+    teal:  { bg: '#F0FDF4', border: '#D1FAE5', text: '#059669', top: '#10B981' },
+    blue:  { bg: '#EFF6FF', border: '#BFDBFE', text: '#2563EB', top: '#3B82F6' },
+    amber: { bg: '#FFFBEB', border: '#FDE68A', text: '#D97706', top: '#F59E0B' },
+    rose:  { bg: '#FFF1F2', border: '#FECDD3', text: '#E11D48', top: '#F43F5E' },
   }
   const c = colors[accent]
 
@@ -47,17 +47,17 @@ function AdminStatCard({
       style={{
         background:  c.bg,
         border:      `1px solid ${c.border}`,
-        borderTop:   `2px solid ${c.top}`,
-        boxShadow:   '0 2px 12px rgba(0,0,0,0.3)',
+        borderTop:   `3px solid ${c.top}`,
+        boxShadow:   '0 1px 4px rgba(0,0,0,0.06)',
       }}
     >
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-500">{label}</p>
+      <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-500">{label}</p>
       {loading ? (
         <div className="mt-3 h-8 w-16 animate-pulse rounded-md" style={{ background: 'rgba(255,255,255,0.06)' }} />
       ) : (
-        <p className="mt-2 text-3xl font-bold tracking-tight text-white">{value}</p>
+        <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">{value}</p>
       )}
-      {sub && <p className="mt-1 text-xs text-slate-500">{sub}</p>}
+      {sub && <p className="mt-1 text-xs text-gray-500">{sub}</p>}
     </div>
   )
 }
@@ -148,15 +148,15 @@ export function SuperAdminDashboard() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">Platform Overview</h1>
-            <p className="mt-0.5 text-sm text-slate-500">
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">Platform Overview</h1>
+            <p className="mt-0.5 text-sm text-gray-500">
               {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
           </div>
           <button
             onClick={() => navigate('/admin/tenants/new')}
             className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5"
-            style={{ background: 'linear-gradient(135deg, #10B981, #059669)', boxShadow: '0 4px 14px rgba(16,185,129,0.3)' }}
+            className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-sm"
           >
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -179,10 +179,10 @@ export function SuperAdminDashboard() {
           style={{ background: '#161B22', border: '1px solid rgba(255,255,255,0.07)', boxShadow: '0 4px 24px rgba(0,0,0,0.3)' }}
         >
           <div
-            className="flex items-center justify-between px-6 py-4"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}
+            className="flex items-center justify-between px-6 py-4 bg-gray-50 border-b border-gray-100"
+            style={{}}
           >
-            <h2 className="text-sm font-semibold text-white">All Tenants</h2>
+            <h2 className="text-sm font-semibold text-gray-900">All Tenants</h2>
             <button
               onClick={() => navigate('/admin/tenants')}
               className="text-xs font-medium transition hover:text-white"
@@ -211,9 +211,9 @@ export function SuperAdminDashboard() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <tr className="bg-gray-50 border-b border-gray-100">
                     {['Company', 'Plan', 'Users', 'Leads', 'Created', 'Status', ''].map(h => (
-                      <th key={h} className="px-5 py-3.5 text-left text-[10px] font-semibold uppercase tracking-widest text-slate-500">{h}</th>
+                      <th key={h} className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-gray-500">{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -221,19 +221,19 @@ export function SuperAdminDashboard() {
                   {tenants.slice(0, 10).map(tenant => (
                     <tr
                       key={tenant.id}
-                      className="cursor-pointer transition-colors hover:bg-white/[0.025]"
+                      className="cursor-pointer transition-colors hover:bg-gray-50 border-b border-gray-50"
                       onClick={() => navigate(`/admin/tenants/${tenant.id}`)}
-                      style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+                      
                     >
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
                           <div
                             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
-                            style={{ background: 'rgba(16,185,129,0.2)' }}
+                            className="bg-emerald-100 text-emerald-700"
                           >
                             {tenant.name.charAt(0).toUpperCase()}
                           </div>
-                          <span className="font-medium text-white">{tenant.name}</span>
+                          <span className="font-medium text-gray-900">{tenant.name}</span>
                         </div>
                       </td>
                       <td className="px-5 py-4"><PlanBadge plan={tenant.plan} /></td>
@@ -256,7 +256,7 @@ export function SuperAdminDashboard() {
                         )}
                       </td>
                       <td className="px-5 py-4">
-                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-slate-600">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-400">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                         </svg>
                       </td>

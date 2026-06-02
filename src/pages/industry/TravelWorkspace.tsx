@@ -50,7 +50,7 @@ function LeadRow({
   lead, children, onClick,
 }: { lead: Lead; children?: React.ReactNode; onClick: () => void }) {
   return (
-    <tr className="cursor-pointer transition-colors hover:bg-gray-800/30" onClick={onClick}>
+    <tr className="cursor-pointer transition-colors hover:bg-gray-50" onClick={onClick}>
       <td className="px-4 py-3">
         <p className="text-sm font-medium text-white">{lead.name}</p>
         <p className="text-xs text-gray-500">{lead.phone ?? lead.whatsapp ?? ''}</p>
@@ -64,10 +64,10 @@ function LeadRow({
 
 function Section({ title, count, children }: { title: string; count: number; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900">
-      <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4">
-        <h2 className="text-sm font-semibold text-white">{title}</h2>
-        <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs text-gray-400">{count}</span>
+    <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+        <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
+        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-600 font-medium">{count}</span>
       </div>
       {children}
     </div>
@@ -76,7 +76,7 @@ function Section({ title, count, children }: { title: string; count: number; chi
 
 function EmptyRow({ cols, message }: { cols: number; message: string }) {
   return (
-    <tr><td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-500">{message}</td></tr>
+    <tr><td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-400">{message}</td></tr>
   )
 }
 
@@ -129,7 +129,7 @@ export function TravelWorkspace() {
 
         {/* Header */}
         <div>
-          <h1 className="text-xl font-semibold text-white">Travel Workspace</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Travel Workspace</h1>
           <p className="mt-0.5 text-sm text-gray-500">Bookings, visa tracking, and departure management</p>
         </div>
 
@@ -143,31 +143,31 @@ export function TravelWorkspace() {
 
         {/* Upcoming Departures */}
         <Section title="Upcoming Departures" count={upcoming.length}>
-          <div className="flex items-center gap-2 border-b border-gray-800 px-5 py-3">
+          <div className="flex items-center gap-2 border-b border-gray-100 px-5 py-3">
             <span className="text-xs text-gray-500">Show next:</span>
             {(['30','60','90'] as const).map(d => (
               <button key={d}
                 onClick={() => setDaysFilter(d)}
-                className={`rounded-lg px-3 py-1 text-xs font-medium transition ${daysFilter === d ? 'bg-indigo-600 text-white' : 'border border-gray-700 text-gray-400 hover:text-white'}`}
+                className={`rounded-lg px-3 py-1 text-xs font-medium transition ${daysFilter === d ? 'bg-emerald-600 text-white' : 'border border-gray-700 text-gray-400 hover:text-white'}`}
               >{d} days</button>
             ))}
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead><tr className="border-b border-gray-800">
+              <thead><tr className="border-b border-gray-100">
                 {['Client','Destination','Departure','Return','Passengers','Booking Status','Actions'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">{h}</th>
                 ))}
               </tr></thead>
-              <tbody className="divide-y divide-gray-800">
-                {loading && <tr><td colSpan={7} className="px-4 py-8 text-center"><div className="h-5 w-5 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent mx-auto"/></td></tr>}
+              <tbody className="divide-y divide-gray-100">
+                {loading && <tr><td colSpan={7} className="px-4 py-8 text-center"><div className="h-5 w-5 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent mx-auto"/></td></tr>}
                 {!loading && upcoming.length === 0 && <EmptyRow cols={7} message={`No departures in the next ${days} days`} />}
                 {!loading && upcoming.map(lead => (
                   <LeadRow key={lead.id} lead={lead} onClick={() => navigate(`/leads/${lead.id}`)}>
-                    <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'destination') || '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-300">{formatDate(cd(lead, 'departure_date'))}</td>
-                    <td className="px-4 py-3 text-sm text-gray-300">{formatDate(cd(lead, 'return_date'))}</td>
-                    <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'passengers') || '—'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'destination') || '—'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{formatDate(cd(lead, 'departure_date'))}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{formatDate(cd(lead, 'return_date'))}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'passengers') || '—'}</td>
                     <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
                       <InlineSelect
                         value={cd(lead, 'booking_status') || 'Inquiry'}
@@ -199,17 +199,17 @@ export function TravelWorkspace() {
         <Section title="Visa Tracking" count={visaNeeded.length}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead><tr className="border-b border-gray-800">
+              <thead><tr className="border-b border-gray-100">
                 {['Client','Destination','Departure','Visa Status','Actions'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">{h}</th>
                 ))}
               </tr></thead>
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {!loading && visaNeeded.length === 0 && <EmptyRow cols={5} message="No visa-required bookings pending" />}
                 {!loading && visaNeeded.map(lead => (
                   <LeadRow key={lead.id} lead={lead} onClick={() => navigate(`/leads/${lead.id}`)}>
-                    <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'destination') || '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-300">{formatDate(cd(lead, 'departure_date'))}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'destination') || '—'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{formatDate(cd(lead, 'departure_date'))}</td>
                     <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
                       <InlineSelect
                         value={cd(lead, 'visa_status') || 'Pending'}
@@ -237,19 +237,19 @@ export function TravelWorkspace() {
         <Section title="Passport Alerts (expiring within 6 months)" count={passportExp.length}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead><tr className="border-b border-gray-800">
+              <thead><tr className="border-b border-gray-100">
                 {['Client','Passport No.','Expiry Date','Days Left','Actions'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">{h}</th>
                 ))}
               </tr></thead>
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {!loading && passportExp.length === 0 && <EmptyRow cols={5} message="No passport expiry alerts" />}
                 {!loading && passportExp.map(lead => {
                   const days = daysUntil(cd(lead, 'passport_expiry'))
                   return (
                     <LeadRow key={lead.id} lead={lead} onClick={() => navigate(`/leads/${lead.id}`)}>
-                      <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'passport_number') || '—'}</td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{formatDate(cd(lead, 'passport_expiry'))}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'passport_number') || '—'}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{formatDate(cd(lead, 'passport_expiry'))}</td>
                       <td className="px-4 py-3">
                         <span className={`text-sm font-medium ${days <= 30 ? 'text-rose-400' : days <= 90 ? 'text-amber-400' : 'text-gray-300'}`}>
                           {days} days
@@ -270,7 +270,7 @@ export function TravelWorkspace() {
         <Section title="Booking Status Board" count={leads.length}>
           <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
             {byBooking.map(({ status, leads: group }) => (
-              <div key={status} className="rounded-xl border border-gray-700 bg-gray-800 p-4">
+              <div key={status} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
                   <Badge label={status} color={bookingColor[status] ?? 'bg-gray-500/20 text-gray-400'} />
                   <span className="text-xs text-gray-500">{group.length}</span>
@@ -280,7 +280,7 @@ export function TravelWorkspace() {
                     <li key={lead.id}
                       className="cursor-pointer rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 hover:border-gray-600 transition"
                       onClick={() => navigate(`/leads/${lead.id}`)}>
-                      <p className="text-xs font-medium text-white truncate">{lead.name}</p>
+                      <p className="text-xs font-medium text-gray-900 truncate">{lead.name}</p>
                       <p className="text-xs text-gray-500">{cd(lead, 'destination') || 'No destination'}</p>
                     </li>
                   ))}

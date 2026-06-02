@@ -47,10 +47,10 @@ function useAction(refetch: () => void) {
 
 function Section({ title, count, children }: { title: string; count: number; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900">
-      <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4">
-        <h2 className="text-sm font-semibold text-white">{title}</h2>
-        <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs text-gray-400">{count}</span>
+    <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+        <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
+        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-600 font-medium">{count}</span>
       </div>
       {children}
     </div>
@@ -60,7 +60,7 @@ function Section({ title, count, children }: { title: string; count: number; chi
 function EmptyRow({ cols, msg }: { cols: number; msg: string }) {
   return (
     <tr>
-      <td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-500">{msg}</td>
+      <td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-400">{msg}</td>
     </tr>
   )
 }
@@ -68,9 +68,9 @@ function EmptyRow({ cols, msg }: { cols: number; msg: string }) {
 function ColHeaders({ headers }: { headers: string[] }) {
   return (
     <thead>
-      <tr className="border-b border-gray-800">
+      <tr className="border-b border-gray-100">
         {headers.map(h => (
-          <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">{h}</th>
+          <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">{h}</th>
         ))}
       </tr>
     </thead>
@@ -91,12 +91,12 @@ function UpdateSessionsModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-gray-800 bg-gray-900 p-6">
-        <h3 className="mb-4 text-sm font-semibold text-white">Update Sessions — {lead.name}</h3>
+      <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white shadow-sm p-6">
+        <h3 className="mb-4 text-sm font-semibold text-gray-900">Update Sessions — {lead.name}</h3>
         <div className="space-y-3">
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1">Sessions Booked</label>
-            <p className="text-sm text-gray-300">{booked || '—'}</p>
+            <p className="text-sm text-gray-700">{booked || '—'}</p>
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1">Sessions Completed</label>
@@ -114,13 +114,13 @@ function UpdateSessionsModal({
         <div className="mt-4 flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 rounded-lg border border-gray-700 px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800"
+            className="flex-1 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
           >
             Cancel
           </button>
           <button
             onClick={() => onSave(Number(completed))}
-            className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+            className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-indigo-700"
           >
             Save
           </button>
@@ -195,7 +195,7 @@ export function CoachingWorkspace() {
 
         {/* Header */}
         <div>
-          <h1 className="text-xl font-semibold text-white">Coaching Workspace</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Coaching Workspace</h1>
           <p className="mt-0.5 text-sm text-gray-500">Student management, sessions, and revenue tracking</p>
         </div>
 
@@ -212,22 +212,22 @@ export function CoachingWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Student', 'Coaching Type', 'Sessions', 'Fee', 'Actions']} />
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {loading && (
                   <tr><td colSpan={5} className="px-4 py-8 text-center">
-                    <div className="h-5 w-5 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent mx-auto" />
+                    <div className="h-5 w-5 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent mx-auto" />
                   </td></tr>
                 )}
                 {!loading && todaySessions.length === 0 && <EmptyRow cols={5} msg="No sessions scheduled today" />}
                 {!loading && todaySessions.map(lead => (
-                  <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-800/30"
+                  <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-50"
                     onClick={() => navigate(`/leads/${lead.id}`)}>
                     <td className="px-4 py-3">
                       <p className="text-sm font-medium text-white">{lead.name}</p>
                       <p className="text-xs text-gray-500">{lead.phone ?? ''}</p>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'coaching_type') || '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-300">
+                    <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'coaching_type') || '—'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">
                       {cdNum(lead, 'sessions_completed')}/{cdNum(lead, 'sessions_booked') || '?'}
                     </td>
                     <td className="px-4 py-3 text-sm font-medium text-amber-400">
@@ -262,20 +262,20 @@ export function CoachingWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Student', 'Coaching Type', 'Goal', 'Sessions Progress', 'Start Date', 'Monthly Fee', 'Actions']} />
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {!loading && activeStudents.length === 0 && <EmptyRow cols={7} msg="No active students" />}
                 {!loading && activeStudents.map(lead => {
                   const booked    = cdNum(lead, 'sessions_booked')
                   const completed = cdNum(lead, 'sessions_completed')
                   const pct = booked > 0 ? Math.round((completed / booked) * 100) : 0
                   return (
-                    <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-800/30"
+                    <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-50"
                       onClick={() => navigate(`/leads/${lead.id}`)}>
                       <td className="px-4 py-3">
                         <p className="text-sm font-medium text-white">{lead.name}</p>
                         <p className="text-xs text-gray-500">{lead.phone ?? ''}</p>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'coaching_type') || '—'}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'coaching_type') || '—'}</td>
                       <td className="px-4 py-3 text-xs text-gray-400 max-w-32 truncate">{cd(lead, 'goal') || '—'}</td>
                       <td className="px-4 py-3">
                         {booked > 0 ? (
@@ -291,7 +291,7 @@ export function CoachingWorkspace() {
                           <span className="text-sm text-gray-600">—</span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{formatDate(cd(lead, 'start_date'))}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{formatDate(cd(lead, 'start_date'))}</td>
                       <td className="px-4 py-3 text-sm font-medium text-amber-400">
                         {cdNum(lead, 'monthly_fee') > 0 ? formatCurrency(cdNum(lead, 'monthly_fee')) : '—'}
                       </td>
@@ -316,19 +316,19 @@ export function CoachingWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Student', 'Coaching Type', 'Start Date', 'Days Away', 'Monthly Fee', 'Actions']} />
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {!loading && newAdmissions.length === 0 && <EmptyRow cols={6} msg="No new admissions in the next 30 days" />}
                 {!loading && newAdmissions.map(lead => {
                   const d = daysUntil(cd(lead, 'start_date'))
                   return (
-                    <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-800/30"
+                    <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-50"
                       onClick={() => navigate(`/leads/${lead.id}`)}>
                       <td className="px-4 py-3">
                         <p className="text-sm font-medium text-white">{lead.name}</p>
                         <p className="text-xs text-gray-500">{lead.phone ?? ''}</p>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'coaching_type') || '—'}</td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{formatDate(cd(lead, 'start_date'))}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'coaching_type') || '—'}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{formatDate(cd(lead, 'start_date'))}</td>
                       <td className="px-4 py-3">
                         <span className={`text-sm font-medium ${d <= 7 ? 'text-amber-400' : 'text-gray-300'}`}>{d}d</span>
                       </td>
@@ -362,17 +362,17 @@ export function CoachingWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Student', 'Coaching Type', 'Follow-up Date', 'Stage', 'Actions']} />
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {!loading && followUpDue.length === 0 && <EmptyRow cols={5} msg="No follow-ups due in the next 3 days" />}
                 {!loading && followUpDue.map(lead => (
-                  <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-800/30"
+                  <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-50"
                     onClick={() => navigate(`/leads/${lead.id}`)}>
                     <td className="px-4 py-3">
                       <p className="text-sm font-medium text-white">{lead.name}</p>
                       <p className="text-xs text-gray-500">{lead.phone ?? ''}</p>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'coaching_type') || '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-300">
+                    <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'coaching_type') || '—'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">
                       {lead.followup_date ? formatDateTime(lead.followup_date) : '—'}
                     </td>
                     <td className="px-4 py-3">
@@ -403,22 +403,22 @@ export function CoachingWorkspace() {
 
           {/* Coaching types */}
           <Section title="By Coaching Type" count={typeList.length}>
-            <ul className="divide-y divide-gray-800">
+            <ul className="divide-y divide-gray-100">
               {typeList.map(([type, count]) => (
                 <li key={type} className="flex items-center justify-between px-5 py-3">
-                  <span className="text-sm text-gray-300">{type}</span>
+                  <span className="text-sm text-gray-700">{type}</span>
                   <span className="text-sm font-semibold text-indigo-400">{count}</span>
                 </li>
               ))}
               {typeList.length === 0 && (
-                <li className="px-5 py-10 text-center text-sm text-gray-500">No coaching types set</li>
+                <li className="px-5 py-10 text-center text-sm text-gray-400">No coaching types set</li>
               )}
             </ul>
           </Section>
 
           {/* Stage board mini */}
           <Section title="Pipeline Stage" count={leads.length}>
-            <ul className="divide-y divide-gray-800">
+            <ul className="divide-y divide-gray-100">
               {byStage.map(({ stage, leads: group }) => (
                 <li key={stage} className="flex items-center justify-between px-5 py-3">
                   <Badge label={stage} color={stageColor[stage] ?? 'bg-gray-500/20 text-gray-400'} />
@@ -436,20 +436,20 @@ export function CoachingWorkspace() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <ColHeaders headers={['Student', 'Type', 'Booked', 'Completed', 'Progress', 'Action']} />
-                <tbody className="divide-y divide-gray-800">
+                <tbody className="divide-y divide-gray-100">
                   {sessionProgress.map(lead => {
                     const booked    = cdNum(lead, 'sessions_booked')
                     const completed = cdNum(lead, 'sessions_completed')
                     const pct = booked > 0 ? Math.round((completed / booked) * 100) : 0
                     return (
-                      <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-800/30"
+                      <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-50"
                         onClick={() => navigate(`/leads/${lead.id}`)}>
                         <td className="px-4 py-3">
                           <p className="text-sm font-medium text-white">{lead.name}</p>
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'coaching_type') || '—'}</td>
-                        <td className="px-4 py-3 text-sm text-gray-300">{booked}</td>
-                        <td className="px-4 py-3 text-sm text-gray-300">{completed}</td>
+                        <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'coaching_type') || '—'}</td>
+                        <td className="px-4 py-3 text-sm text-gray-700">{booked}</td>
+                        <td className="px-4 py-3 text-sm text-gray-700">{completed}</td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             <div className="h-1.5 w-24 rounded-full bg-gray-700">

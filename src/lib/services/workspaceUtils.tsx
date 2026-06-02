@@ -109,12 +109,12 @@ export async function logWorkspaceActivity(
 
 // ─── Shared UI helpers ────────────────────────────────────────────────────────
 
-export const inputCls = 'w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-export const selectCls = 'rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-export const btnPrimary = 'flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-indigo-700'
-export const btnSecondary = 'flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs font-medium text-gray-300 transition hover:bg-gray-700 hover:text-white'
+export const inputCls = 'w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500'
+export const selectCls = 'rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500'
+export const btnPrimary = 'flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-emerald-700'
+export const btnSecondary = 'flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:bg-gray-50 hover:text-gray-900'
 export const btnSuccess = 'flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-emerald-700'
-export const btnDanger = 'flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-medium text-rose-400 transition hover:bg-rose-500/20'
+export const btnDanger = 'flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-100'
 
 /** KPI card component — used at the top of every workspace */
 export interface KpiProps {
@@ -124,28 +124,28 @@ export interface KpiProps {
   sub?:    string
 }
 
-const accentBg:   Record<KpiProps['accent'], string> = {
-  indigo: 'bg-indigo-500/20',  emerald: 'bg-emerald-500/20',
-  amber:  'bg-amber-500/20',   rose:    'bg-rose-500/20',
-  sky:    'bg-sky-500/20',     violet:  'bg-violet-500/20',
+const accentBg: Record<KpiProps['accent'], string> = {
+  indigo: 'bg-blue-50',    emerald: 'bg-emerald-50',
+  amber:  'bg-amber-50',   rose:    'bg-rose-50',
+  sky:    'bg-sky-50',     violet:  'bg-violet-50',
 }
 const accentText: Record<KpiProps['accent'], string> = {
-  indigo: 'text-indigo-400',  emerald: 'text-emerald-400',
-  amber:  'text-amber-400',   rose:    'text-rose-400',
-  sky:    'text-sky-400',     violet:  'text-violet-400',
+  indigo: 'text-blue-700',    emerald: 'text-emerald-700',
+  amber:  'text-amber-700',   rose:    'text-rose-700',
+  sky:    'text-sky-700',     violet:  'text-violet-700',
 }
 const accentBorder: Record<KpiProps['accent'], string> = {
-  indigo: 'border-indigo-500/20',  emerald: 'border-emerald-500/20',
-  amber:  'border-amber-500/20',   rose:    'border-rose-500/20',
-  sky:    'border-sky-500/20',     violet:  'border-violet-500/20',
+  indigo: 'border-blue-200',    emerald: 'border-emerald-200',
+  amber:  'border-amber-200',   rose:    'border-rose-200',
+  sky:    'border-sky-200',     violet:  'border-violet-200',
 }
 
 export function KpiCard({ label, value, accent, sub }: KpiProps) {
   return (
     <div className={`rounded-2xl border ${accentBorder[accent]} ${accentBg[accent]} p-5`}>
-      <p className="text-xs font-medium uppercase tracking-widest text-gray-500">{label}</p>
+      <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">{label}</p>
       <p className={`mt-1 text-3xl font-bold ${accentText[accent]}`}>{value}</p>
-      {sub && <p className="mt-0.5 text-xs text-gray-600">{sub}</p>}
+      {sub && <p className="mt-0.5 text-xs text-gray-500">{sub}</p>}
     </div>
   )
 }

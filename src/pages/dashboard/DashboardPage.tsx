@@ -47,8 +47,8 @@ export function DashboardPage() {
 
         {/* Page heading */}
         <div className="px-6 pt-7 pb-3">
-          <h1 className="text-2xl font-bold tracking-tight text-white">Dashboard</h1>
-          <p className="mt-0.5 text-sm text-slate-500">{today}</p>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Dashboard</h1>
+          <p className="mt-0.5 text-sm text-gray-500">{today}</p>
         </div>
 
         {/* Error */}

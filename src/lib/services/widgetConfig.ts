@@ -21,7 +21,7 @@ export const CORE_WIDGETS: StatWidgetDef[] = [
   {
     key:      'total_leads',
     label:    'Total Leads',
-    accent:   'indigo',
+    accent:   'emerald',
     href:     '/leads',
     getValue: s => s.total_leads,
     icon:     'leads',
@@ -61,7 +61,7 @@ const REAL_ESTATE_WIDGETS: StatWidgetDef[] = [
   {
     key:      'total_leads',
     label:    'Total Buyers',
-    accent:   'indigo',
+    accent:   'emerald',
     href:     '/leads',
     getValue: s => s.total_leads,
     icon:     'leads',
@@ -96,7 +96,7 @@ const INSURANCE_WIDGETS: StatWidgetDef[] = [
   {
     key:      'total_leads',
     label:    'Total Prospects',
-    accent:   'indigo',
+    accent:   'emerald',
     href:     '/leads',
     getValue: s => s.total_leads,
     icon:     'leads',
@@ -131,7 +131,7 @@ const TRAVEL_WIDGETS: StatWidgetDef[] = [
   {
     key:      'total_leads',
     label:    'Total Inquiries',
-    accent:   'indigo',
+    accent:   'emerald',
     href:     '/leads',
     getValue: s => s.total_leads,
     icon:     'leads',
@@ -201,7 +201,7 @@ const COACH_WIDGETS: StatWidgetDef[] = [
   {
     key:      'total_leads',
     label:    'Total Prospects',
-    accent:   'indigo',
+    accent:   'emerald',
     href:     '/leads',
     getValue: s => s.total_leads,
     icon:     'leads',
@@ -236,7 +236,7 @@ const EDUCATION_WIDGETS: StatWidgetDef[] = [
   {
     key:      'total_leads',
     label:    'Total Students',
-    accent:   'indigo',
+    accent:   'emerald',
     href:     '/leads',
     getValue: s => s.total_leads,
     icon:     'leads',

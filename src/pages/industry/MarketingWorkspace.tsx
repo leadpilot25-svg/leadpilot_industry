@@ -40,13 +40,13 @@ function Section({ title, count, extra, children }: {
   title: string; count: number; extra?: React.ReactNode; children: React.ReactNode
 }) {
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-800 px-5 py-4">
+    <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 px-5 py-4">
         <div className="flex items-center gap-3">
-          <h2 className="text-sm font-semibold text-white">{title}</h2>
+          <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
           {extra}
         </div>
-        <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs text-gray-400">{count}</span>
+        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-600 font-medium">{count}</span>
       </div>
       {children}
     </div>
@@ -56,7 +56,7 @@ function Section({ title, count, extra, children }: {
 function EmptyRow({ cols, msg }: { cols: number; msg: string }) {
   return (
     <tr>
-      <td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-500">{msg}</td>
+      <td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-400">{msg}</td>
     </tr>
   )
 }
@@ -64,9 +64,9 @@ function EmptyRow({ cols, msg }: { cols: number; msg: string }) {
 function ColHeaders({ headers }: { headers: string[] }) {
   return (
     <thead>
-      <tr className="border-b border-gray-800">
+      <tr className="border-b border-gray-100">
         {headers.map(h => (
-          <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+          <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
             {h}
           </th>
         ))}
@@ -88,8 +88,8 @@ function AssignManagerModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-gray-800 bg-gray-900 p-6">
-        <h3 className="mb-4 text-sm font-semibold text-white">Assign Account Manager — {lead.name}</h3>
+      <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white shadow-sm p-6">
+        <h3 className="mb-4 text-sm font-semibold text-gray-900">Assign Account Manager — {lead.name}</h3>
         <div>
           <label className="block text-xs font-medium text-gray-400 mb-1">Account Manager Name</label>
           <input
@@ -103,13 +103,13 @@ function AssignManagerModal({
         <div className="mt-4 flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 rounded-lg border border-gray-700 px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800"
+            className="flex-1 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
           >
             Cancel
           </button>
           <button
             onClick={() => onSave(manager)}
-            className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+            className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-indigo-700"
           >
             Assign
           </button>
@@ -132,12 +132,12 @@ function UpdateRevenueModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-gray-800 bg-gray-900 p-6">
-        <h3 className="mb-4 text-sm font-semibold text-white">Update Revenue — {lead.name}</h3>
+      <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white shadow-sm p-6">
+        <h3 className="mb-4 text-sm font-semibold text-gray-900">Update Revenue — {lead.name}</h3>
         <div className="space-y-3">
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1">Contract Value</label>
-            <p className="text-sm text-gray-300">{formatCurrency(cdNum(lead, 'contract_value'))}</p>
+            <p className="text-sm text-gray-700">{formatCurrency(cdNum(lead, 'contract_value'))}</p>
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1">Revenue To Date</label>
@@ -153,13 +153,13 @@ function UpdateRevenueModal({
         <div className="mt-4 flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 rounded-lg border border-gray-700 px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800"
+            className="flex-1 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
           >
             Cancel
           </button>
           <button
             onClick={() => onSave(Number(amount))}
-            className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+            className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-indigo-700"
           >
             Save
           </button>
@@ -243,7 +243,7 @@ export function MarketingWorkspace() {
 
         {/* Header */}
         <div>
-          <h1 className="text-xl font-semibold text-white">Marketing Workspace</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Marketing Workspace</h1>
           <p className="mt-0.5 text-sm text-gray-500">Campaign management, retainers, and revenue tracking</p>
         </div>
 
@@ -260,10 +260,10 @@ export function MarketingWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Client','Account Manager','Campaigns','Contract End','Value','Revenue','Status','Actions']} />
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {loading && (
                   <tr><td colSpan={8} className="px-4 py-8 text-center">
-                    <div className="h-5 w-5 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent mx-auto" />
+                    <div className="h-5 w-5 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent mx-auto" />
                   </td></tr>
                 )}
                 {!loading && retainers.length === 0 && (
@@ -272,17 +272,17 @@ export function MarketingWorkspace() {
                 {!loading && retainers.map(lead => (
                   <tr
                     key={lead.id}
-                    className="cursor-pointer transition-colors hover:bg-gray-800/30"
+                    className="cursor-pointer transition-colors hover:bg-gray-50"
                     onClick={() => navigate(`/leads/${lead.id}`)}
                   >
                     <td className="px-4 py-3">
                       <p className="text-sm font-medium text-white">{lead.name}</p>
                       <p className="text-xs text-gray-500">{cd(lead, 'industry') || lead.email || ''}</p>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-300">
+                    <td className="px-4 py-3 text-sm text-gray-700">
                       {cd(lead, 'account_manager') || <span className="text-rose-400">Unassigned</span>}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-300">
+                    <td className="px-4 py-3 text-sm text-gray-700">
                       {cd(lead, 'campaign_type') || '—'}
                     </td>
                     <td className="px-4 py-3">
@@ -293,7 +293,7 @@ export function MarketingWorkspace() {
                         </span>
                       ) : <span className="text-gray-600">—</span>}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-300">
+                    <td className="px-4 py-3 text-sm text-gray-700">
                       {formatCurrency(cdNum(lead, 'contract_value'))}
                     </td>
                     <td className="px-4 py-3 text-sm font-medium text-emerald-400">
@@ -344,7 +344,7 @@ export function MarketingWorkspace() {
                   onClick={() => setRenewalDays(d)}
                   className={`rounded px-2.5 py-1 text-xs font-medium transition ${
                     renewalDays === d
-                      ? 'bg-indigo-600 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'border border-gray-700 text-gray-400 hover:text-white'
                   }`}
                 >
@@ -357,7 +357,7 @@ export function MarketingWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Client','Account Manager','Contract End','Days Left','Value','Actions']} />
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {!loading && renewalsDue.length === 0 && (
                   <EmptyRow cols={6} msg={`No contracts ending in ${days} days`} />
                 )}
@@ -366,17 +366,17 @@ export function MarketingWorkspace() {
                   return (
                     <tr
                       key={lead.id}
-                      className="cursor-pointer transition-colors hover:bg-gray-800/30"
+                      className="cursor-pointer transition-colors hover:bg-gray-50"
                       onClick={() => navigate(`/leads/${lead.id}`)}
                     >
                       <td className="px-4 py-3">
                         <p className="text-sm font-medium text-white">{lead.name}</p>
                         <p className="text-xs text-gray-500">{cd(lead, 'industry') || ''}</p>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-300">
+                      <td className="px-4 py-3 text-sm text-gray-700">
                         {cd(lead, 'account_manager') || '—'}
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-300">
+                      <td className="px-4 py-3 text-sm text-gray-700">
                         {formatDate(cd(lead, 'contract_end'))}
                       </td>
                       <td className="px-4 py-3">
@@ -384,7 +384,7 @@ export function MarketingWorkspace() {
                           {d}d
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-300">
+                      <td className="px-4 py-3 text-sm text-gray-700">
                         {formatCurrency(cdNum(lead, 'contract_value'))}
                       </td>
                       <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
@@ -421,14 +421,14 @@ export function MarketingWorkspace() {
         <Section title="Campaign Overview" count={campaigns.length}>
           <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3 lg:grid-cols-4">
             {campaigns.map(([type, data]) => (
-              <div key={type} className="rounded-xl border border-gray-700 bg-gray-800 p-4">
+              <div key={type} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                 <p className="text-sm font-medium text-white truncate">{type}</p>
-                <p className="mt-1 text-2xl font-bold text-indigo-400">{data.count}</p>
+                <p className="mt-1 text-2xl font-bold text-emerald-600">{data.count}</p>
                 <p className="text-xs text-gray-500 mt-0.5">{formatCurrency(data.value)}</p>
               </div>
             ))}
             {!loading && campaigns.length === 0 && (
-              <p className="col-span-4 py-8 text-center text-sm text-gray-500">
+              <p className="col-span-4 py-8 text-center text-sm text-gray-400">
                 No campaign types configured
               </p>
             )}
@@ -440,7 +440,7 @@ export function MarketingWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Client','Account Manager','Contract Value','Revenue To Date','% Collected','Contract Status','Actions']} />
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {!loading && leads.filter(l => cdNum(l, 'contract_value') > 0).length === 0 && (
                   <EmptyRow cols={7} msg="No contracts with value set" />
                 )}
@@ -454,17 +454,17 @@ export function MarketingWorkspace() {
                     return (
                       <tr
                         key={lead.id}
-                        className="cursor-pointer transition-colors hover:bg-gray-800/30"
+                        className="cursor-pointer transition-colors hover:bg-gray-50"
                         onClick={() => navigate(`/leads/${lead.id}`)}
                       >
                         <td className="px-4 py-3">
                           <p className="text-sm font-medium text-white">{lead.name}</p>
                           <p className="text-xs text-gray-500">{cd(lead, 'industry') || ''}</p>
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-300">
+                        <td className="px-4 py-3 text-sm text-gray-700">
                           {cd(lead, 'account_manager') || '—'}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-300">{formatCurrency(cv)}</td>
+                        <td className="px-4 py-3 text-sm text-gray-700">{formatCurrency(cv)}</td>
                         <td className="px-4 py-3 text-sm font-medium text-emerald-400">{formatCurrency(rv)}</td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
@@ -504,18 +504,18 @@ export function MarketingWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Account Manager','Total Clients','Active','Revenue','Avg per Client']} />
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {!loading && managers.map(m => (
-                  <tr key={m.name} className="hover:bg-gray-800/30">
+                  <tr key={m.name} className="hover:bg-gray-50">
                     <td className="px-4 py-3 text-sm font-medium text-white">{m.name}</td>
-                    <td className="px-4 py-3 text-sm text-gray-300">{m.clients}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{m.clients}</td>
                     <td className="px-4 py-3">
                       <span className="text-sm font-medium text-emerald-400">{m.active}</span>
                     </td>
                     <td className="px-4 py-3 text-sm font-medium text-emerald-400">
                       {formatCurrency(m.revenue)}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-300">
+                    <td className="px-4 py-3 text-sm text-gray-700">
                       {m.clients > 0 ? formatCurrency(Math.round(m.revenue / m.clients)) : '—'}
                     </td>
                   </tr>
@@ -529,7 +529,7 @@ export function MarketingWorkspace() {
         <Section title="Contract Status Board" count={leads.length}>
           <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3 lg:grid-cols-4">
             {byStatus.map(({ status, leads: group }) => (
-              <div key={status} className="rounded-xl border border-gray-700 bg-gray-800 p-4">
+              <div key={status} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
                   <Badge label={status} color={contractColor[status] ?? 'bg-gray-500/20 text-gray-400'} />
                   <span className="text-xs text-gray-500">{group.length}</span>
@@ -541,7 +541,7 @@ export function MarketingWorkspace() {
                       className="cursor-pointer rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 hover:border-gray-600 transition"
                       onClick={() => navigate(`/leads/${l.id}`)}
                     >
-                      <p className="text-xs font-medium text-white truncate">{l.name}</p>
+                      <p className="text-xs font-medium text-gray-900 truncate">{l.name}</p>
                       <p className="text-xs text-gray-500">{cd(l, 'account_manager') || ''}</p>
                     </li>
                   ))}

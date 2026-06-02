@@ -269,12 +269,12 @@ export function LeadsListPage() {
 
   return (
     <AppLayout>
-      <div className="px-4 py-6 sm:px-6">
+      <div className="px-4 py-6 sm:px-6 max-w-7xl mx-auto">
 
         {/* Header */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-white">Leads</h1>
+            <h1 className="text-xl font-semibold text-gray-900">Leads</h1>
             <p className="mt-0.5 text-sm text-gray-500">
               {loading ? '…' : `${displayLeads.length} lead${displayLeads.length !== 1 ? 's' : ''}`}
               {tab === 'aged' && <span className="ml-1.5 text-rose-400 text-xs">• aged leads</span>}
@@ -284,7 +284,7 @@ export function LeadsListPage() {
             {isRole('client_admin', 'super_admin') && (
               <button
                 onClick={() => navigate('/leads/import')}
-                className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-semibold text-gray-300 transition hover:bg-gray-700 hover:text-white"
+                className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 shadow-sm"
               >
                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
@@ -294,7 +294,7 @@ export function LeadsListPage() {
             )}
             <button
               onClick={() => navigate('/leads/new')}
-              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
+              className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-sm"
             >
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -308,13 +308,13 @@ export function LeadsListPage() {
         <div className="mb-4 flex items-center gap-2">
           <button
             onClick={() => setTab('all')}
-            className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${tab === 'all' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-white'}`}
+            className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${tab === 'all' ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
           >
             All leads
           </button>
           <button
             onClick={() => setTab('aged')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition ${tab === 'aged' ? 'bg-rose-500/20 text-rose-400' : 'text-gray-500 hover:text-white'}`}
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition ${tab === 'aged' ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'text-gray-500 hover:text-gray-700'}`}
           >
             Aged (7d+)
             {agedLeads.length > 0 && (
@@ -337,13 +337,13 @@ export function LeadsListPage() {
               placeholder="Search name, email, phone…"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 py-2 pl-9 pr-3 text-sm text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>
           <select
             value={status}
             onChange={e => setStatus(e.target.value as LeadStatus | 'all')}
-            className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none"
+            className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none"
           >
             {STATUS_OPTIONS.map(o => (
               <option key={o.value} value={o.value}>{o.label}</option>
@@ -359,33 +359,33 @@ export function LeadsListPage() {
         )}
 
         {/* Table */}
-        <div className="rounded-2xl overflow-hidden" style={{ background: "rgba(30,41,59,0.6)", border: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 4px 24px rgba(0,0,0,0.25)" }}>
+        <div className="rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                <tr className="border-b border-gray-100 bg-gray-50">
                   {/* Checkbox header */}
                   <th className="w-10 px-4 py-3.5">
                     <input
                       type="checkbox"
                       checked={allSelected}
                       onChange={toggleAll}
-                      className="h-4 w-4 rounded border-gray-700 bg-gray-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-gray-900"
+                      className="h-4 w-4 rounded border-gray-300 bg-white text-emerald-600 focus:ring-emerald-500"
                     />
                   </th>
                   {['Name', 'Phone', 'Status', 'Source', 'Follow-up', 'Age', ''].map((h, i) => (
-                    <th key={i} className="px-4 py-3.5 text-left text-[10px] font-semibold uppercase tracking-widest text-slate-500">{h}</th>
+                    <th key={i} className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-gray-500">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+              <tbody className="divide-y divide-gray-100">
 
                 {loading && Array.from({ length: 6 }).map((_, i) => (
                   <tr key={i}>
-                    <td className="px-4 py-3"><div className="h-4 w-4 rounded bg-gray-800" /></td>
+                    <td className="px-4 py-3"><div className="h-4 w-4 rounded bg-gray-100" /></td>
                     {[55, 40, 25, 30, 30, 20].map((w, j) => (
                       <td key={j} className="px-4 py-3">
-                        <div className="h-4 animate-pulse rounded bg-gray-800" style={{ width: `${w}%` }} />
+                        <div className="h-4 animate-pulse rounded bg-gray-100" style={{ width: `${w}%` }} />
                       </td>
                     ))}
                     <td className="px-4 py-3" />
@@ -409,7 +409,7 @@ export function LeadsListPage() {
                 {!loading && displayLeads.map(lead => (
                   <tr
                     key={lead.id}
-                    className={`cursor-pointer transition-all duration-150 ${selected.has(lead.id) ? 'bg-violet-500/5' : 'hover:bg-white/[0.03]'}`}
+                    className={`cursor-pointer transition-colors ${selected.has(lead.id) ? 'bg-emerald-50' : 'hover:bg-gray-50'}`}
                     onClick={() => navigate(`/leads/${lead.id}`)}
                   >
                     {/* Checkbox */}
@@ -418,12 +418,12 @@ export function LeadsListPage() {
                         type="checkbox"
                         checked={selected.has(lead.id)}
                         onChange={() => toggleOne(lead.id)}
-                        className="h-4 w-4 rounded border-gray-700 bg-gray-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-gray-900"
+                        className="h-4 w-4 rounded border-gray-300 bg-white text-emerald-600 focus:ring-emerald-500"
                       />
                     </td>
                     <td className="px-4 py-3">
-                      <p className="font-medium text-white">{lead.name}</p>
-                      {lead.email && <p className="text-xs text-gray-500 mt-0.5">{lead.email}</p>}
+                      <p className="font-medium text-gray-900">{lead.name}</p>
+                      {lead.email && <p className="text-xs text-gray-400 mt-0.5">{lead.email}</p>}
                     </td>
                     <td className="px-4 py-3 text-gray-400 text-xs">{lead.phone ?? lead.whatsapp ?? '—'}</td>
                     <td className="px-4 py-3"><LeadStatusBadge status={lead.status} /></td>

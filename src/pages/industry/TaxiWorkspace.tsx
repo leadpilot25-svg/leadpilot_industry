@@ -34,10 +34,10 @@ function useAction(refetch: () => void) {
 
 function Section({ title, count, children }: { title: string; count: number; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900">
-      <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4">
-        <h2 className="text-sm font-semibold text-white">{title}</h2>
-        <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs text-gray-400">{count}</span>
+    <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+        <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
+        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-600 font-medium">{count}</span>
       </div>
       {children}
     </div>
@@ -45,7 +45,7 @@ function Section({ title, count, children }: { title: string; count: number; chi
 }
 
 function EmptyRow({ cols, msg }: { cols: number; msg: string }) {
-  return <tr><td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-500">{msg}</td></tr>
+  return <tr><td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-400">{msg}</td></tr>
 }
 
 // Driver assignment modal
@@ -58,8 +58,8 @@ function AssignDriverModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-gray-800 bg-gray-900 p-6">
-        <h3 className="mb-4 text-sm font-semibold text-white">Assign Driver — {lead.name}</h3>
+      <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white shadow-sm p-6">
+        <h3 className="mb-4 text-sm font-semibold text-gray-900">Assign Driver — {lead.name}</h3>
         <div className="space-y-3">
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1">Driver Name</label>
@@ -79,11 +79,11 @@ function AssignDriverModal({
         </div>
         <div className="mt-4 flex gap-3">
           <button onClick={onClose}
-            className="flex-1 rounded-lg border border-gray-700 px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800">
+            className="flex-1 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">
             Cancel
           </button>
           <button onClick={() => onSave(driverName, driverPhone, vehicleNo)}
-            className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
+            className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-indigo-700">
             Assign
           </button>
         </div>
@@ -122,15 +122,15 @@ export function TaxiWorkspace() {
   })).filter(g => g.leads.length > 0)
 
   const TripRow = ({ lead }: { lead: Lead }) => (
-    <tr className="cursor-pointer transition-colors hover:bg-gray-800/30" onClick={() => navigate(`/leads/${lead.id}`)}>
+    <tr className="cursor-pointer transition-colors hover:bg-gray-50" onClick={() => navigate(`/leads/${lead.id}`)}>
       <td className="px-4 py-3">
         <p className="text-sm font-medium text-white">{lead.name}</p>
         <p className="text-xs text-gray-500">{lead.phone}</p>
       </td>
-      <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'pickup_location') || '—'}</td>
-      <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'drop_location') || '—'}</td>
-      <td className="px-4 py-3 text-sm text-gray-300">{formatDateTime(cd(lead, 'pickup_datetime'))}</td>
-      <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'driver_name') || <span className="text-rose-400">Unassigned</span>}</td>
+      <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'pickup_location') || '—'}</td>
+      <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'drop_location') || '—'}</td>
+      <td className="px-4 py-3 text-sm text-gray-700">{formatDateTime(cd(lead, 'pickup_datetime'))}</td>
+      <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'driver_name') || <span className="text-rose-400">Unassigned</span>}</td>
       <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
         <InlineSelect
           value={cd(lead, 'trip_status') || 'Pending'}
@@ -161,7 +161,7 @@ export function TaxiWorkspace() {
       <div className="px-4 py-6 sm:px-6 space-y-6">
 
         <div>
-          <h1 className="text-xl font-semibold text-white">Taxi Workspace</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Taxi Workspace</h1>
           <p className="mt-0.5 text-sm text-gray-500">Trips, driver assignment, and vehicle scheduling</p>
         </div>
 
@@ -177,11 +177,11 @@ export function TaxiWorkspace() {
         <Section title="Today's Trips" count={todaysTrips.length}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead><tr className="border-b border-gray-800">
-                {headers.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">{h}</th>)}
+              <thead><tr className="border-b border-gray-100">
+                {headers.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">{h}</th>)}
               </tr></thead>
-              <tbody className="divide-y divide-gray-800">
-                {loading && <tr><td colSpan={7} className="px-4 py-8 text-center"><div className="h-5 w-5 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent mx-auto" /></td></tr>}
+              <tbody className="divide-y divide-gray-100">
+                {loading && <tr><td colSpan={7} className="px-4 py-8 text-center"><div className="h-5 w-5 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent mx-auto" /></td></tr>}
                 {!loading && todaysTrips.length === 0 && <EmptyRow cols={7} msg="No trips today" />}
                 {!loading && todaysTrips.map(l => <TripRow key={l.id} lead={l} />)}
               </tbody>
@@ -193,10 +193,10 @@ export function TaxiWorkspace() {
         <Section title="Unassigned Trips" count={unassigned.length}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead><tr className="border-b border-gray-800">
-                {headers.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">{h}</th>)}
+              <thead><tr className="border-b border-gray-100">
+                {headers.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">{h}</th>)}
               </tr></thead>
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {!loading && unassigned.length === 0 && <EmptyRow cols={7} msg="All trips are assigned" />}
                 {!loading && unassigned.map(l => <TripRow key={l.id} lead={l} />)}
               </tbody>
@@ -208,10 +208,10 @@ export function TaxiWorkspace() {
         <Section title="Upcoming Trips (next 7 days)" count={upcomingTrips.length}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead><tr className="border-b border-gray-800">
-                {headers.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">{h}</th>)}
+              <thead><tr className="border-b border-gray-100">
+                {headers.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">{h}</th>)}
               </tr></thead>
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {!loading && upcomingTrips.length === 0 && <EmptyRow cols={7} msg="No upcoming trips in the next 7 days" />}
                 {!loading && upcomingTrips.map(l => <TripRow key={l.id} lead={l} />)}
               </tbody>
@@ -224,16 +224,16 @@ export function TaxiWorkspace() {
           <Section title="Vehicle Scheduling" count={leads.length}>
             <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
               {vehicleGroups.map(({ type, leads: group }) => (
-                <div key={type} className="rounded-xl border border-gray-700 bg-gray-800 p-4">
+                <div key={type} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-sm font-semibold text-white">{type}</p>
+                    <p className="text-sm font-semibold text-gray-900">{type}</p>
                     <span className="rounded-full bg-gray-700 px-2 py-0.5 text-xs text-gray-400">{group.length} trips</span>
                   </div>
                   <ul className="space-y-2">
                     {group.slice(0, 4).map(l => (
                       <li key={l.id} className="cursor-pointer rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 hover:border-gray-600 transition"
                         onClick={() => navigate(`/leads/${l.id}`)}>
-                        <p className="text-xs font-medium text-white truncate">{l.name}</p>
+                        <p className="text-xs font-medium text-gray-900 truncate">{l.name}</p>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className={`text-xs px-1.5 py-0.5 rounded ${tripColor[cd(l, 'trip_status')] ?? 'text-gray-500'}`}>
                             {cd(l, 'trip_status') || 'Pending'}

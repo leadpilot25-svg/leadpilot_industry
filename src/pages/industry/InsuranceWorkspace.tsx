@@ -33,13 +33,13 @@ function useAction(refetch: () => void) {
 
 function Section({ title, count, extra, children }: { title: string; count: number; extra?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900">
-      <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4">
+    <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
         <div className="flex items-center gap-3">
-          <h2 className="text-sm font-semibold text-white">{title}</h2>
+          <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
           {extra}
         </div>
-        <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs text-gray-400">{count}</span>
+        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-600 font-medium">{count}</span>
       </div>
       {children}
     </div>
@@ -47,7 +47,7 @@ function Section({ title, count, extra, children }: { title: string; count: numb
 }
 
 function EmptyRow({ cols, msg }: { cols: number; msg: string }) {
-  return <tr><td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-500">{msg}</td></tr>
+  return <tr><td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-400">{msg}</td></tr>
 }
 
 export function InsuranceWorkspace() {
@@ -97,8 +97,8 @@ export function InsuranceWorkspace() {
   const renewalCount   = leads.filter(l => cd(l, 'policy_status') === 'Renewal Due').length
 
   const ColHeaders = ({ headers }: { headers: string[] }) => (
-    <thead><tr className="border-b border-gray-800">
-      {headers.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">{h}</th>)}
+    <thead><tr className="border-b border-gray-100">
+      {headers.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">{h}</th>)}
     </tr></thead>
   )
 
@@ -107,7 +107,7 @@ export function InsuranceWorkspace() {
       <div className="px-4 py-6 sm:px-6 space-y-6">
 
         <div>
-          <h1 className="text-xl font-semibold text-white">Insurance Workspace</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Insurance Workspace</h1>
           <p className="mt-0.5 text-sm text-gray-500">Renewals, premium tracking, and policy management</p>
         </div>
 
@@ -127,7 +127,7 @@ export function InsuranceWorkspace() {
             <div className="flex gap-1">
               {(['30','60','90'] as const).map(d => (
                 <button key={d} onClick={() => setRenewalDays(d)}
-                  className={`rounded px-2.5 py-1 text-xs font-medium transition ${renewalDays === d ? 'bg-indigo-600 text-white' : 'border border-gray-700 text-gray-400 hover:text-white'}`}>
+                  className={`rounded px-2.5 py-1 text-xs font-medium transition ${renewalDays === d ? 'bg-emerald-600 text-white' : 'border border-gray-700 text-gray-400 hover:text-white'}`}>
                   {d}d
                 </button>
               ))}
@@ -137,24 +137,24 @@ export function InsuranceWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Client','Policy Type','Policy No.','Expiry','Days Left','Premium','Status','Actions']} />
-              <tbody className="divide-y divide-gray-800">
-                {loading && <tr><td colSpan={8} className="px-4 py-8 text-center"><div className="h-5 w-5 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent mx-auto"/></td></tr>}
+              <tbody className="divide-y divide-gray-100">
+                {loading && <tr><td colSpan={8} className="px-4 py-8 text-center"><div className="h-5 w-5 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent mx-auto"/></td></tr>}
                 {!loading && expiring.length === 0 && <EmptyRow cols={8} msg={`No policies expiring in ${days} days`} />}
                 {!loading && expiring.map(lead => {
                   const d = daysUntil(cd(lead, 'policy_expiry_date'))
                   return (
-                    <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-800/30" onClick={() => navigate(`/leads/${lead.id}`)}>
+                    <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-50" onClick={() => navigate(`/leads/${lead.id}`)}>
                       <td className="px-4 py-3">
                         <p className="text-sm font-medium text-white">{lead.name}</p>
                         <p className="text-xs text-gray-500">{lead.phone}</p>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'policy_type') || '—'}</td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'policy_number') || '—'}</td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{formatDate(cd(lead, 'policy_expiry_date'))}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'policy_type') || '—'}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'policy_number') || '—'}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{formatDate(cd(lead, 'policy_expiry_date'))}</td>
                       <td className="px-4 py-3">
                         <span className={`text-sm font-semibold ${d <= 14 ? 'text-rose-400' : d <= 30 ? 'text-amber-400' : 'text-gray-300'}`}>{d}d</span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{formatCurrency(cdNum(lead, 'premium_amount'))}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{formatCurrency(cdNum(lead, 'premium_amount'))}</td>
                       <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
                         <InlineSelect
                           value={cd(lead, 'policy_status') || 'Policy Issued'}
@@ -193,17 +193,17 @@ export function InsuranceWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Client','Policy Type','Frequency','Next Due','Premium Amount','Actions']} />
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {!loading && premiumDue.length === 0 && <EmptyRow cols={6} msg="No premiums due in the next 30 days" />}
                 {!loading && premiumDue.map(lead => (
-                  <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-800/30" onClick={() => navigate(`/leads/${lead.id}`)}>
+                  <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-50" onClick={() => navigate(`/leads/${lead.id}`)}>
                     <td className="px-4 py-3">
                       <p className="text-sm font-medium text-white">{lead.name}</p>
                       <p className="text-xs text-gray-500">{lead.phone}</p>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'policy_type') || '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'payment_frequency') || '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-300">{formatDate(cd(lead, 'next_premium_due'))}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'policy_type') || '—'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'payment_frequency') || '—'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{formatDate(cd(lead, 'next_premium_due'))}</td>
                     <td className="px-4 py-3 text-sm font-medium text-emerald-400">{formatCurrency(cdNum(lead, 'premium_amount'))}</td>
                     <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
                       <div className="flex gap-1.5">
@@ -225,7 +225,7 @@ export function InsuranceWorkspace() {
         <Section title="Policy Status Board" count={leads.length}>
           <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
             {byStatus.map(({ status, leads: group }) => (
-              <div key={status} className="rounded-xl border border-gray-700 bg-gray-800 p-4">
+              <div key={status} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
                   <Badge label={status} color={statusColor[status] ?? 'bg-gray-500/20 text-gray-400'} />
                   <span className="text-xs text-gray-500">{group.length}</span>
@@ -234,7 +234,7 @@ export function InsuranceWorkspace() {
                   {group.slice(0, 5).map(l => (
                     <li key={l.id} className="cursor-pointer rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 hover:border-gray-600 transition"
                       onClick={() => navigate(`/leads/${l.id}`)}>
-                      <p className="text-xs font-medium text-white truncate">{l.name}</p>
+                      <p className="text-xs font-medium text-gray-900 truncate">{l.name}</p>
                       <p className="text-xs text-gray-500">{cd(l, 'policy_type') || ''}</p>
                     </li>
                   ))}
@@ -250,13 +250,13 @@ export function InsuranceWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Agent','Total Clients','Policies Issued','Conversion','Total Premium']} />
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {agentList.map(a => (
-                  <tr key={a.name} className="hover:bg-gray-800/30">
+                  <tr key={a.name} className="hover:bg-gray-50">
                     <td className="px-4 py-3 text-sm font-medium text-white">{a.name}</td>
-                    <td className="px-4 py-3 text-sm text-gray-300">{a.total}</td>
-                    <td className="px-4 py-3 text-sm text-gray-300">{a.issued}</td>
-                    <td className="px-4 py-3 text-sm text-gray-300">
+                    <td className="px-4 py-3 text-sm text-gray-700">{a.total}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{a.issued}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">
                       {a.total > 0 ? `${Math.round((a.issued / a.total) * 100)}%` : '—'}
                     </td>
                     <td className="px-4 py-3 text-sm font-medium text-emerald-400">{formatCurrency(a.premium)}</td>

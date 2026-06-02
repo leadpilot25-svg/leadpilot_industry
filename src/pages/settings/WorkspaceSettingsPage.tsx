@@ -93,8 +93,10 @@ function settingsToForm(ws: WorkspaceSettings): FormState {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export function WorkspaceSettingsPage() {
-  const { profile, user } = useAuth()
-  const tenantId = profile?.tenant_id ?? null
+  const { profile, user, isRole } = useAuth()
+  const tenantId    = profile?.tenant_id ?? null
+  // Only super_admin can change business_type — all others see it read-only
+  const canChangeIndustry = isRole('super_admin')
 
   const [settings,    setSettings]    = useState<WorkspaceSettings | null>(null)
   const [form,        setForm]        = useState<FormState | null>(null)
@@ -195,13 +197,15 @@ export function WorkspaceSettingsPage() {
         return
       }
 
+      // business_type is excluded from the update payload for non-super-admin.
+      // The DB trigger also blocks it as a second line of defence.
       const update: Partial<WorkspaceSettings> = {
         company_name:    form.company_name.trim(),
         whatsapp_number: form.whatsapp_number.trim() || null,
-        business_type:   form.business_type,
         timezone:        form.timezone,
         currency:        form.currency,
         brand_color:     form.brand_color,
+        ...(canChangeIndustry ? { business_type: form.business_type } : {}),
       }
 
       if (logoUrl !== null) {
@@ -324,18 +328,29 @@ export function WorkspaceSettingsPage() {
               />
             </Field>
 
-            {/* Business type */}
+            {/* Business type — read-only for client_admin and agent */}
             <Field id="business_type" label="Business type">
-              <select
-                id="business_type"
-                value={form.business_type}
-                onChange={e => handleChange('business_type', e.target.value)}
-                className={selectCls}
-              >
-                {BUSINESS_TYPES.map(bt => (
-                  <option key={bt.value} value={bt.value}>{bt.label}</option>
-                ))}
-              </select>
+              {canChangeIndustry ? (
+                <select
+                  id="business_type"
+                  value={form.business_type}
+                  onChange={e => handleChange('business_type', e.target.value)}
+                  className={selectCls}
+                >
+                  {BUSINESS_TYPES.map(bt => (
+                    <option key={bt.value} value={bt.value}>{bt.label}</option>
+                  ))}
+                </select>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-medium text-gray-900">
+                    {BUSINESS_TYPES.find(bt => bt.value === form.business_type)?.label ?? form.business_type}
+                  </p>
+                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500">
+                    Assigned by admin
+                  </span>
+                </div>
+              )}
             </Field>
 
             {/* WhatsApp number */}

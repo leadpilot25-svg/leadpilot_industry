@@ -33,10 +33,10 @@ function useAction(refetch: () => void) {
 
 function Section({ title, count, children }: { title: string; count: number; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900">
-      <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4">
-        <h2 className="text-sm font-semibold text-white">{title}</h2>
-        <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs text-gray-400">{count}</span>
+    <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+        <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
+        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-600 font-medium">{count}</span>
       </div>
       {children}
     </div>
@@ -44,7 +44,7 @@ function Section({ title, count, children }: { title: string; count: number; chi
 }
 
 function EmptyRow({ cols, msg }: { cols: number; msg: string }) {
-  return <tr><td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-500">{msg}</td></tr>
+  return <tr><td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-400">{msg}</td></tr>
 }
 
 // Modal to record fee payment
@@ -53,12 +53,12 @@ function FeePaymentModal({ lead, onClose, onSave }: { lead: Lead; onClose: () =>
   const [mode,   setMode]   = useState(cd(lead, 'payment_mode') || 'Online')
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-gray-800 bg-gray-900 p-6">
-        <h3 className="mb-4 text-sm font-semibold text-white">Update Fee — {lead.name}</h3>
+      <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white shadow-sm p-6">
+        <h3 className="mb-4 text-sm font-semibold text-gray-900">Update Fee — {lead.name}</h3>
         <div className="space-y-3">
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1">Fee Quoted</label>
-            <p className="text-sm text-gray-300">{formatCurrency(cdNum(lead, 'fee_quoted'))}</p>
+            <p className="text-sm text-gray-700">{formatCurrency(cdNum(lead, 'fee_quoted'))}</p>
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1">Total Fee Paid</label>
@@ -68,14 +68,14 @@ function FeePaymentModal({ lead, onClose, onSave }: { lead: Lead; onClose: () =>
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1">Payment Mode</label>
             <select value={mode} onChange={e => setMode(e.target.value)}
-              className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
+              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
               {PAYMENT_MODES.map(m => <option key={m} value={m}>{m}</option>)}
             </select>
           </div>
         </div>
         <div className="mt-4 flex gap-3">
-          <button onClick={onClose} className="flex-1 rounded-lg border border-gray-700 px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800">Cancel</button>
-          <button onClick={() => onSave(Number(amount), mode)} className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">Save Payment</button>
+          <button onClick={onClose} className="flex-1 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</button>
+          <button onClick={() => onSave(Number(amount), mode)} className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-indigo-700">Save Payment</button>
         </div>
       </div>
     </div>
@@ -133,8 +133,8 @@ export function EducationWorkspace() {
     .sort((a, b) => (cdNum(b, 'fee_quoted') - cdNum(b, 'fee_paid')) - (cdNum(a, 'fee_quoted') - cdNum(a, 'fee_paid')))
 
   const ColHeaders = ({ headers }: { headers: string[] }) => (
-    <thead><tr className="border-b border-gray-800">
-      {headers.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">{h}</th>)}
+    <thead><tr className="border-b border-gray-100">
+      {headers.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">{h}</th>)}
     </tr></thead>
   )
 
@@ -143,7 +143,7 @@ export function EducationWorkspace() {
       <div className="px-4 py-6 sm:px-6 space-y-6">
 
         <div>
-          <h1 className="text-xl font-semibold text-white">Education Workspace</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Education Workspace</h1>
           <p className="mt-0.5 text-sm text-gray-500">Batch management, enrollment, and fee tracking</p>
         </div>
 
@@ -160,18 +160,18 @@ export function EducationWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Batch','Total Students','Enrolled','Dropout','Fee Collected','Fee Pending','Action']} />
-              <tbody className="divide-y divide-gray-800">
-                {loading && <tr><td colSpan={7} className="px-4 py-8 text-center"><div className="h-5 w-5 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent mx-auto"/></td></tr>}
+              <tbody className="divide-y divide-gray-100">
+                {loading && <tr><td colSpan={7} className="px-4 py-8 text-center"><div className="h-5 w-5 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent mx-auto"/></td></tr>}
                 {!loading && batches.length === 0 && <EmptyRow cols={7} msg="No batches configured. Add a Batch field to your leads." />}
                 {!loading && batches.map(batch => {
                   const dropout = batch.members.filter(l => cd(l, 'enrollment_status') === 'Dropped Out').length
                   return (
-                    <tr key={batch.name} className="hover:bg-gray-800/30">
+                    <tr key={batch.name} className="hover:bg-gray-50">
                       <td className="px-4 py-3 text-sm font-medium text-white">{batch.name}</td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{batch.total}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{batch.total}</td>
                       <td className="px-4 py-3"><span className="text-sm font-medium text-emerald-400">{batch.enrolled}</span></td>
                       <td className="px-4 py-3"><span className="text-sm text-rose-400">{dropout}</span></td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{formatCurrency(batch.feePaid)}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{formatCurrency(batch.feePaid)}</td>
                       <td className="px-4 py-3">
                         <span className={`text-sm font-medium ${batch.feeQuoted - batch.feePaid > 0 ? 'text-amber-400' : 'text-gray-500'}`}>
                           {formatCurrency(batch.feeQuoted - batch.feePaid)}
@@ -194,7 +194,7 @@ export function EducationWorkspace() {
         <Section title="Enrollment Status" count={leads.length}>
           <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
             {byStatus.map(({ status, leads: group }) => (
-              <div key={status} className="rounded-xl border border-gray-700 bg-gray-800 p-4">
+              <div key={status} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
                   <Badge label={status} color={statusColor[status] ?? 'bg-gray-500/20 text-gray-400'} />
                   <span className="text-xs text-gray-500">{group.length}</span>
@@ -204,7 +204,7 @@ export function EducationWorkspace() {
                     <li key={l.id}
                       className="cursor-pointer rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 hover:border-gray-600 transition"
                       onClick={() => navigate(`/leads/${l.id}`)}>
-                      <p className="text-xs font-medium text-white truncate">{l.name}</p>
+                      <p className="text-xs font-medium text-gray-900 truncate">{l.name}</p>
                       <p className="text-xs text-gray-500">{cd(l, 'course') || cd(l, 'batch') || ''}</p>
                     </li>
                   ))}
@@ -220,19 +220,19 @@ export function EducationWorkspace() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <ColHeaders headers={['Student','Course','Batch','Fee Quoted','Fee Paid','Balance','Actions']} />
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {!loading && feePending.length === 0 && <EmptyRow cols={7} msg="All fees collected" />}
                 {!loading && feePending.map(lead => {
                   const balance = cdNum(lead, 'fee_quoted') - cdNum(lead, 'fee_paid')
                   return (
-                    <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-800/30" onClick={() => navigate(`/leads/${lead.id}`)}>
+                    <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-50" onClick={() => navigate(`/leads/${lead.id}`)}>
                       <td className="px-4 py-3">
                         <p className="text-sm font-medium text-white">{lead.name}</p>
                         <p className="text-xs text-gray-500">{lead.phone}</p>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'course') || '—'}</td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{cd(lead, 'batch') || '—'}</td>
-                      <td className="px-4 py-3 text-sm text-gray-300">{formatCurrency(cdNum(lead, 'fee_quoted'))}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'course') || '—'}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'batch') || '—'}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{formatCurrency(cdNum(lead, 'fee_quoted'))}</td>
                       <td className="px-4 py-3 text-sm text-emerald-400">{formatCurrency(cdNum(lead, 'fee_paid'))}</td>
                       <td className="px-4 py-3 text-sm font-semibold text-amber-400">{formatCurrency(balance)}</td>
                       <td className="px-4 py-3" onClick={e => e.stopPropagation()}>

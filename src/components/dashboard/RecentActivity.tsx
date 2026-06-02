@@ -16,13 +16,13 @@ const activityLabel: Record<LeadActivityType, string> = {
   note:          'Note added',
 }
 const activityBg: Record<LeadActivityType, string> = {
-  call:          'bg-blue-500/20',
-  whatsapp:      'bg-emerald-500/20',
-  sms:           'bg-violet-500/20',
-  email:         'bg-sky-500/20',
-  status_change: 'bg-amber-500/20',
-  assignment:    'bg-indigo-500/20',
-  note:          'bg-gray-500/20',
+  call:          'bg-blue-50',
+  whatsapp:      'bg-emerald-50',
+  sms:           'bg-violet-50',
+  email:         'bg-sky-50',
+  status_change: 'bg-amber-50',
+  assignment:    'bg-indigo-50',
+  note:          'bg-gray-100',
 }
 const activityText: Record<LeadActivityType, string> = {
   call:          'text-blue-400',
@@ -66,11 +66,11 @@ function timeAgo(iso: string): string {
 
 export function RecentActivity({ activities, loading }: RecentActivityProps) {
   return (
-    <div className="flex flex-col rounded-2xl border border-gray-800 bg-gray-900">
+    <div className="flex flex-col rounded-2xl border border-gray-200 bg-white shadow-sm">
 
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
-        <h2 className="text-sm font-semibold text-white">Recent Activity</h2>
-        <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs text-gray-400">
+      <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4 bg-gray-50">
+        <h2 className="text-sm font-semibold text-gray-900">Recent Activity</h2>
+        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-500 font-medium">
           {loading ? '…' : activities.length}
         </span>
       </div>
@@ -79,7 +79,7 @@ export function RecentActivity({ activities, loading }: RecentActivityProps) {
 
         {loading && Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className="flex gap-3 px-6 py-3">
-            <div className="h-7 w-7 shrink-0 animate-pulse rounded-lg bg-gray-800" />
+            <div className="h-7 w-7 shrink-0 animate-pulse rounded-lg bg-gray-100" />
             <div className="flex-1 space-y-1.5 pt-0.5">
               <div className="h-3 w-3/4 animate-pulse rounded bg-gray-800" />
               <div className="h-3 w-1/3 animate-pulse rounded bg-gray-800" />

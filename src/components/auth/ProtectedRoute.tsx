@@ -1,21 +1,23 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import { useWorkspaceSettings } from '../../hooks/useWorkspaceSettings'
 import type { Role } from '../../types/auth'
 
-interface ProtectedRouteProps {
-  allowedRoles?:     Role[]
-  requiresOnboarding?: boolean
-}
+// ─── Shared loading screen ────────────────────────────────────────────────────
 
 function LoadingScreen() {
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ background: '#0D1117' }}>
-      <div className="flex flex-col items-center gap-3">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" style={{ borderColor: '#10B981', borderTopColor: 'transparent' }} />
-        <p className="text-sm text-slate-500">Loading…</p>
-      </div>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
     </div>
   )
+}
+
+// ─── ProtectedRoute ───────────────────────────────────────────────────────────
+
+interface ProtectedRouteProps {
+  allowedRoles?:       Role[]
+  requiresOnboarding?: boolean
 }
 
 export function ProtectedRoute({
@@ -27,21 +29,17 @@ export function ProtectedRoute({
 
   if (loading) return <LoadingScreen />
 
-  // Not signed in → login
   if (!session) {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
   if (!profile) return <LoadingScreen />
 
-  // super_admin always skips onboarding gate and goes to /admin
+  // super_admin skips all onboarding gates — always goes to /admin
   if (profile.role === 'super_admin') {
-    // If the route requires onboarding (i.e. it's a regular app route),
-    // and the user is super_admin, redirect them to /admin
     if (requiresOnboarding && !location.pathname.startsWith('/admin')) {
       return <Navigate to="/admin" replace />
     }
-    // Role check still applies for admin-section routes
     if (allowedRoles && !allowedRoles.includes(profile.role)) {
       return <Navigate to="/admin" replace />
     }
@@ -53,13 +51,52 @@ export function ProtectedRoute({
     return <Navigate to="/onboarding" replace />
   }
 
-  // Already onboarded — don't show onboarding again
+  // Already onboarded — skip onboarding page
   if (!requiresOnboarding && onboardingComplete) {
     return <Navigate to="/dashboard" replace />
   }
 
-  // Role check — wrong role → dashboard
+  // Role check
   if (allowedRoles && !allowedRoles.includes(profile.role)) {
+    return <Navigate to="/dashboard" replace />
+  }
+
+  return <Outlet />
+}
+
+// ─── IndustryRoute ────────────────────────────────────────────────────────────
+// Route-level guard for all /industry/* pages.
+// Redirects before the workspace page mounts if the tenant's business_type
+// does not match the required industry — no flash, no partial render.
+
+interface IndustryRouteProps {
+  industry: string
+}
+
+export function IndustryRoute({ industry }: IndustryRouteProps) {
+  const { session, profile, loading } = useAuth()
+  const location = useLocation()
+  const tenantId = profile?.tenant_id ?? null
+  const { settings, loading: settingsLoading } = useWorkspaceSettings(tenantId)
+
+  if (loading || settingsLoading) return <LoadingScreen />
+
+  if (!session || !profile) {
+    return <Navigate to="/login" state={{ from: location }} replace />
+  }
+
+  // super_admin never enters tenant workspaces
+  if (profile.role === 'super_admin') {
+    return <Navigate to="/admin" replace />
+  }
+
+  // Not yet onboarded
+  if (!settings) {
+    return <Navigate to="/dashboard" replace />
+  }
+
+  // Wrong industry — silent redirect
+  if (settings.business_type !== industry) {
     return <Navigate to="/dashboard" replace />
   }
 

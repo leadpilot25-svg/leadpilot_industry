@@ -7,12 +7,12 @@ interface RecentLeadsProps {
 
 // Each status has its own separate bg/text/ring class — no multi-space strings.
 const statusBg: Record<LeadStatus, string> = {
-  new:         'bg-indigo-500/20',
-  contacted:   'bg-blue-500/20',
-  qualified:   'bg-amber-500/20',
-  won:         'bg-emerald-500/20',
-  lost:        'bg-gray-500/20',
-  unqualified: 'bg-rose-500/20',
+  new:         'bg-blue-50 text-blue-700',
+  contacted:   'bg-indigo-50 text-indigo-700',
+  qualified:   'bg-amber-50 text-amber-700',
+  won:         'bg-emerald-50 text-emerald-700',
+  lost:        'bg-gray-100 text-gray-600',
+  unqualified: 'bg-rose-50 text-rose-700',
 }
 const statusText: Record<LeadStatus, string> = {
   new:         'text-indigo-400',
@@ -37,7 +37,7 @@ function SkeletonRow() {
       {[60, 45, 30, 40].map((w, i) => (
         <td key={i} className="px-4 py-3">
           <div
-            className="h-4 animate-pulse rounded bg-gray-800"
+            className="h-4 animate-pulse rounded bg-gray-100"
             style={{ width: `${w}%` }}
           />
         </td>
@@ -48,11 +48,11 @@ function SkeletonRow() {
 
 export function RecentLeads({ leads, loading }: RecentLeadsProps) {
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900">
+    <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
 
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
-        <h2 className="text-sm font-semibold text-white">Recent Leads</h2>
-        <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs text-gray-400">
+      <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4 bg-gray-50">
+        <h2 className="text-sm font-semibold text-gray-900">Recent Leads</h2>
+        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-500 font-medium">
           {loading ? '…' : leads.length}
         </span>
       </div>
@@ -60,15 +60,15 @@ export function RecentLeads({ leads, loading }: RecentLeadsProps) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-800">
+            <tr className="border-b border-gray-100 bg-gray-50">
               {['Name', 'Phone', 'Status', 'Added'].map(h => (
-                <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-gray-100">
 
             {loading && Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)}
 

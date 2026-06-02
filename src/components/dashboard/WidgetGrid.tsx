@@ -59,13 +59,13 @@ const ICON_MAP: Record<IconKey, React.ReactNode> = {
 
 // Validate accent — StatCard only accepts the 4 base accents.
 // Map the 3 additional industry accents to the closest base accent.
-const ACCENT_MAP: Record<AccentColor, 'indigo' | 'amber' | 'emerald' | 'rose'> = {
-  indigo:  'indigo',
+const ACCENT_MAP: Record<AccentColor, 'emerald' | 'amber' | 'rose' | 'blue'> = {
+  indigo:  'emerald',
   amber:   'amber',
   emerald: 'emerald',
   rose:    'rose',
-  sky:     'indigo',     // taxi uses sky → maps to indigo
-  violet:  'indigo',     // tarot uses violet → maps to indigo
+  sky:     'blue',      // taxi uses sky → maps to blue
+  violet:  'blue',      // tarot uses violet → maps to blue
   orange:  'amber',      // marketing uses orange → maps to amber
 }
 
@@ -87,7 +87,7 @@ export function WidgetGrid({ stats, loading, businessType }: WidgetGridProps) {
   const widgets = getWidgetsForIndustry(businessType)
 
   return (
-    <div className="grid grid-cols-2 gap-4 px-6 pt-2 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 px-6 pt-4 pb-2 lg:grid-cols-4">
       {widgets.map(widget => (
         <StatCard
           key={widget.key}

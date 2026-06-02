@@ -50,7 +50,7 @@ const CURRENCIES = ['INR', 'USD', 'EUR', 'GBP', 'AED', 'SGD']
 
 // ─── UI helpers ───────────────────────────────────────────────────────────────
 
-const inputCls = 'w-full rounded-xl border bg-slate-900 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 transition'
+const inputCls = 'w-full rounded-xl border bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 transition'
   + ' focus:ring-emerald-500 focus:border-emerald-500'
 const borderNormal = 'border-slate-700'
 
@@ -208,14 +208,14 @@ export function CreateTenantWizard() {
 
         {/* Header */}
         <div className="mb-8">
-          <button onClick={() => navigate('/admin/tenants')} className="mb-4 flex items-center gap-1.5 text-xs text-slate-500 transition hover:text-slate-300">
+          <button onClick={() => navigate('/admin/tenants')} className="mb-4 flex items-center gap-1.5 text-xs text-gray-500 transition hover:text-gray-800">
             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
             Back to tenants
           </button>
-          <h1 className="text-2xl font-bold text-white">Create Tenant</h1>
-          <p className="mt-1 text-sm text-slate-500">Set up a new workspace and invite the client admin.</p>
+          <h1 className="text-2xl font-bold text-gray-900">Create Tenant</h1>
+          <p className="mt-1 text-sm text-gray-500">Set up a new workspace and invite the client admin.</p>
         </div>
 
         {/* Step indicators */}
@@ -240,13 +240,13 @@ export function CreateTenantWizard() {
         {/* Step content */}
         <div
           className="rounded-2xl p-6 space-y-5"
-          style={{ background: '#161B22', border: '1px solid rgba(255,255,255,0.07)' }}
+          className="rounded-2xl bg-white border border-gray-200 shadow-sm p-6 space-y-5"
         >
 
           {/* Step 1 — Company */}
           {step === 1 && (
             <>
-              <h2 className="text-base font-semibold text-white">Company details</h2>
+              <h2 className="text-base font-semibold text-gray-900">Company details</h2>
               <Field label="Company name" required>
                 <input type="text" value={form.company_name} onChange={e => set('company_name', e.target.value)}
                   placeholder="Acme Travel Pvt Ltd" className={`${inputCls} ${borderNormal}`} />
@@ -280,7 +280,7 @@ export function CreateTenantWizard() {
           {step === 2 && (
             <>
               <div>
-                <h2 className="text-base font-semibold text-white">Client Admin details</h2>
+                <h2 className="text-base font-semibold text-gray-900">Client Admin details</h2>
                 <p className="mt-0.5 text-xs text-slate-500">This person will manage the workspace and create their own agents.</p>
               </div>
               <Field label="Full name" required>
@@ -291,8 +291,8 @@ export function CreateTenantWizard() {
                 <input type="email" value={form.admin_email} onChange={e => set('admin_email', e.target.value)}
                   placeholder="priya@company.com" className={`${inputCls} ${borderNormal}`} />
               </Field>
-              <div className="rounded-xl p-4 text-sm text-slate-400" style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.15)' }}>
-                <p className="font-medium text-emerald-400 mb-1">What happens next</p>
+              <div className="rounded-xl p-4 text-sm text-slate-400" className="rounded-xl p-4 text-sm text-gray-600 bg-emerald-50 border border-emerald-100">
+                <p className="font-medium text-emerald-700 mb-1">What happens next</p>
                 <ul className="space-y-1 text-xs">
                   <li>• An invite email is sent to the client admin</li>
                   <li>• They click the link and set their password</li>
@@ -306,7 +306,7 @@ export function CreateTenantWizard() {
           {/* Step 3 — Plan */}
           {step === 3 && (
             <>
-              <h2 className="text-base font-semibold text-white">Subscription plan</h2>
+              <h2 className="text-base font-semibold text-gray-900">Subscription plan</h2>
               <div className="space-y-3">
                 {PLANS.map(p => (
                   <button
@@ -316,24 +316,24 @@ export function CreateTenantWizard() {
                     className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-left transition-all"
                     style={
                       form.plan === p.value
-                        ? { background: 'rgba(16,185,129,0.12)', border: '1.5px solid rgba(16,185,129,0.4)' }
-                        : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }
+                        ? { background: '#F0FDF4', border: '2px solid #10B981' }
+                        : { background: '#F9FAFB', border: '1px solid #E5E7EB' }
                     }
                   >
                     <div>
-                      <p className={`text-sm font-semibold ${form.plan === p.value ? 'text-emerald-400' : 'text-white'}`}>{p.label}</p>
+                      <p className={`text-sm font-semibold ${form.plan === p.value ? 'text-emerald-700' : 'text-gray-900'}`}>{p.label}</p>
                       <p className="text-xs text-slate-500 mt-0.5">{p.desc}</p>
                     </div>
                     <div className="text-right">
-                      <p className={`text-sm font-bold ${form.plan === p.value ? 'text-emerald-400' : 'text-slate-400'}`}>{p.price}</p>
+                      <p className={`text-sm font-bold ${form.plan === p.value ? 'text-emerald-700' : 'text-gray-500'}`}>{p.price}</p>
                     </div>
                   </button>
                 ))}
               </div>
 
               {/* Summary */}
-              <div className="rounded-xl p-4 space-y-1.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-                <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-2">Summary</p>
+              <div className="rounded-xl p-4 space-y-1.5" className="rounded-xl p-4 space-y-1.5 bg-gray-50 border border-gray-100">
+                <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Summary</p>
                 {[
                   ['Company',    form.company_name],
                   ['Business',   BUSINESS_TYPES.find(b => b.value === form.business_type)?.label ?? ''],
@@ -341,8 +341,8 @@ export function CreateTenantWizard() {
                   ['Plan',       form.plan],
                 ].map(([k, v]) => (
                   <div key={k} className="flex items-start justify-between gap-4">
-                    <span className="text-xs text-slate-500">{k}</span>
-                    <span className="text-xs text-white text-right">{v}</span>
+                    <span className="text-xs text-gray-500">{k}</span>
+                    <span className="text-xs text-gray-900 text-right font-medium">{v}</span>
                   </div>
                 ))}
               </div>

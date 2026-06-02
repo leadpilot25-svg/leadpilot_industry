@@ -113,13 +113,13 @@ export function TenantsPage() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white">Tenants</h1>
-            <p className="mt-0.5 text-sm text-slate-500">{tenants.length} total workspaces</p>
+            <h1 className="text-2xl font-bold text-gray-900">Tenants</h1>
+            <p className="mt-0.5 text-sm text-gray-500">{tenants.length} total workspaces</p>
           </div>
           <button
             onClick={() => navigate('/admin/tenants/new')}
             className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5"
-            style={{ background: 'linear-gradient(135deg, #10B981, #059669)', boxShadow: '0 4px 14px rgba(16,185,129,0.3)' }}
+            className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-sm"
           >
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -139,16 +139,16 @@ export function TenantsPage() {
               placeholder="Search tenants…"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-900 py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
+              className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none"
             />
           </div>
-          <div className="flex gap-1 rounded-xl p-1" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
+          <div className="flex gap-1 rounded-xl p-1" className="bg-gray-100 rounded-xl p-1">
             {(['all', 'active', 'suspended'] as const).map(f => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
                 className="rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition"
-                style={filter === f ? { background: 'rgba(16,185,129,0.15)', color: '#10B981' } : { color: '#6B7280' }}
+                style={filter === f ? { background: '#fff', color: '#059669', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { color: '#6B7280' }}
               >
                 {f}
               </button>
@@ -159,11 +159,11 @@ export function TenantsPage() {
         {/* Table */}
         <div
           className="rounded-2xl overflow-hidden"
-          style={{ background: '#161B22', border: '1px solid rgba(255,255,255,0.07)', boxShadow: '0 4px 24px rgba(0,0,0,0.3)' }}
+          className="rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm"
         >
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <div className="h-7 w-7 animate-spin rounded-full border-4 border-t-transparent" style={{ borderColor: '#10B981', borderTopColor: 'transparent' }} />
+              <div className="h-7 w-7 animate-spin rounded-full border-4 border-t-transparent" className="h-7 w-7 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
             </div>
           ) : filtered.length === 0 ? (
             <div className="py-20 text-center">
@@ -173,9 +173,9 @@ export function TenantsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <tr className="bg-gray-50 border-b border-gray-100">
                     {['Company', 'Business Type', 'Plan', 'Users', 'Leads', 'Created', 'Status', 'Actions'].map(h => (
-                      <th key={h} className="px-5 py-3.5 text-left text-[10px] font-semibold uppercase tracking-widest text-slate-500">{h}</th>
+                      <th key={h} className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-gray-500">{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -183,20 +183,20 @@ export function TenantsPage() {
                   {filtered.map(tenant => (
                     <tr
                       key={tenant.id}
-                      style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
-                      className="transition-colors hover:bg-white/[0.02]"
+                      className="border-b border-gray-50"
+                      className="transition-colors hover:bg-gray-50"
                     >
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate(`/admin/tenants/${tenant.id}`)}>
                           <div
                             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
-                            style={{ background: 'rgba(16,185,129,0.18)' }}
+                            style={{ background: "#D1FAE5", color: "#059669" }}
                           >
                             {tenant.name.charAt(0).toUpperCase()}
                           </div>
                           <div>
-                            <p className="font-medium text-white hover:text-emerald-400 transition">{tenant.name}</p>
-                            <p className="text-xs text-slate-600">{tenant.slug}</p>
+                            <p className="font-medium text-gray-900 hover:text-emerald-600 transition">{tenant.name}</p>
+                            <p className="text-xs text-gray-500">{tenant.slug}</p>
                           </div>
                         </div>
                       </td>
