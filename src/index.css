@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Prevent white flash on dark pages before React mounts */
+  body {
+    background-color: #111827; /* gray-900 — always valid */
+    color: #ffffff;
+  }
+}
