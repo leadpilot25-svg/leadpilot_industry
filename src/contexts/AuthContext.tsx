@@ -140,7 +140,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [profile],
   )
 
-  const onboardingComplete = profile !== null && profile.tenant_id !== null
+  // super_admin has no tenant_id by design — treat as always onboarded
+  const onboardingComplete = profile !== null &&
+    (profile.tenant_id !== null || profile.role === 'super_admin')
 
   return (
     <AuthContext.Provider

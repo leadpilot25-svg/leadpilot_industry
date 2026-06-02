@@ -3,22 +3,16 @@ import { useAuth } from '../../hooks/useAuth'
 import type { Role } from '../../types/auth'
 
 interface ProtectedRouteProps {
-  /** Restrict to specific roles. Omit to allow any authenticated user. */
-  allowedRoles?: Role[]
-  /**
-   * When true (default), users who haven't completed onboarding are
-   * redirected to /onboarding.
-   * Set to false for the /onboarding route itself so it doesn't loop.
-   */
+  allowedRoles?:     Role[]
   requiresOnboarding?: boolean
 }
 
 function LoadingScreen() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+    <div className="flex min-h-screen items-center justify-center" style={{ background: '#0D1117' }}>
       <div className="flex flex-col items-center gap-3">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
-        <p className="text-sm text-gray-400">Loading…</p>
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" style={{ borderColor: '#10B981', borderTopColor: 'transparent' }} />
+        <p className="text-sm text-slate-500">Loading…</p>
       </div>
     </div>
   )
@@ -31,7 +25,6 @@ export function ProtectedRoute({
   const { session, profile, loading, onboardingComplete } = useAuth()
   const location = useLocation()
 
-  // Wait for Supabase session + profile fetch
   if (loading) return <LoadingScreen />
 
   // Not signed in → login
@@ -39,15 +32,28 @@ export function ProtectedRoute({
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
-  // Signed in but profile still loading edge case
   if (!profile) return <LoadingScreen />
 
-  // Onboarding gate — redirect to /onboarding if not yet complete
+  // super_admin always skips onboarding gate and goes to /admin
+  if (profile.role === 'super_admin') {
+    // If the route requires onboarding (i.e. it's a regular app route),
+    // and the user is super_admin, redirect them to /admin
+    if (requiresOnboarding && !location.pathname.startsWith('/admin')) {
+      return <Navigate to="/admin" replace />
+    }
+    // Role check still applies for admin-section routes
+    if (allowedRoles && !allowedRoles.includes(profile.role)) {
+      return <Navigate to="/admin" replace />
+    }
+    return <Outlet />
+  }
+
+  // Onboarding gate for non-super_admin
   if (requiresOnboarding && !onboardingComplete) {
     return <Navigate to="/onboarding" replace />
   }
 
-  // Already onboarded but landed on /onboarding → go to dashboard
+  // Already onboarded — don't show onboarding again
   if (!requiresOnboarding && onboardingComplete) {
     return <Navigate to="/dashboard" replace />
   }

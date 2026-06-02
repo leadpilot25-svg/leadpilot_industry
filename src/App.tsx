@@ -11,7 +11,10 @@ import { ResetPasswordPage } from './pages/auth/ResetPasswordPage'
 import { AcceptInvitePage } from './pages/auth/AcceptInvitePage'
 import { OnboardingPage } from './pages/onboarding/OnboardingPage'
 import { DashboardPage } from './pages/dashboard/DashboardPage'
-import { AdminPage } from './pages/admin/AdminPage'
+import { SuperAdminDashboard } from './pages/admin/SuperAdminDashboard'
+import { TenantsPage }          from './pages/admin/TenantsPage'
+import { CreateTenantWizard }   from './pages/admin/CreateTenantWizard'
+import { PlatformSettingsPage } from './pages/admin/PlatformSettingsPage'
 import { LeadsListPage } from './pages/leads/LeadsListPage'
 import { AddLeadPage } from './pages/leads/AddLeadPage'
 import { EditLeadPage } from './pages/leads/EditLeadPage'
@@ -79,8 +82,13 @@ const router = createBrowserRouter([
 
   // ── Super admin ──────────────────────────────────────────────────────────
   {
-    element: <ProtectedRoute allowedRoles={['super_admin']} />,
-    children: [{ path: '/admin', element: <AdminPage /> }],
+    element: <ProtectedRoute allowedRoles={['super_admin']} requiresOnboarding={false} />,
+    children: [
+      { path: '/admin',                element: <SuperAdminDashboard /> },
+      { path: '/admin/tenants',        element: <TenantsPage />         },
+      { path: '/admin/tenants/new',    element: <CreateTenantWizard />  },
+      { path: '/admin/settings',       element: <PlatformSettingsPage />},
+    ],
   },
 
   // ── Defaults ─────────────────────────────────────────────────────────────
