@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { useWorkspaceSettings } from '../../hooks/useWorkspaceSettings'
@@ -20,8 +21,15 @@ export function ProtectedRoute({
   allowedRoles,
   requiresOnboarding = true,
 }: ProtectedRouteProps) {
-  const { session, profile, loading, onboardingComplete } = useAuth()
+  const { session, profile, loading, onboardingComplete, signOut } = useAuth()
   const location = useLocation()
+
+  // Sign out disabled users — must run before any early return (hooks rule)
+  useEffect(() => {
+    if (profile && !profile.is_active) {
+      signOut().catch(() => undefined)
+    }
+  }, [profile, signOut])
 
   if (loading) {
     return <LoadingScreen />
@@ -33,6 +41,10 @@ export function ProtectedRoute({
 
   if (!profile) {
     return <LoadingScreen />
+  }
+
+  if (!profile.is_active) {
+    return <Navigate to="/login?reason=disabled" replace />
   }
 
   if (profile.role === 'super_admin') {
@@ -63,13 +75,20 @@ export function ProtectedRoute({
 interface IndustryRouteProps { industry: string }
 
 export function IndustryRoute({ industry }: IndustryRouteProps) {
-  const { session, profile, loading } = useAuth()
+  const { session, profile, loading, signOut } = useAuth()
   const location = useLocation()
   const tenantId = profile?.tenant_id ?? null
   const { settings, loading: settingsLoading } = useWorkspaceSettings(tenantId)
 
+  useEffect(() => {
+    if (profile && !profile.is_active) {
+      signOut().catch(() => undefined)
+    }
+  }, [profile, signOut])
+
   if (loading || settingsLoading) return <LoadingScreen />
   if (!session || !profile) return <Navigate to="/login" state={{ from: location }} replace />
+  if (!profile.is_active) return <Navigate to="/login?reason=disabled" replace />
   if (profile.role === 'super_admin') return <Navigate to="/admin" replace />
   if (!settings) return <Navigate to="/dashboard" replace />
   if (settings.business_type !== industry) return <Navigate to="/dashboard" replace />

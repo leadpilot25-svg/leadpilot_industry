@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Logo } from '../../components/Logo'
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { supabaseConfigured } from '../../lib/supabase'
 
@@ -37,6 +37,8 @@ export function LoginPage() {
   const { session, loading, signIn } = useAuth()
   const navigate   = useNavigate()
   const location   = useLocation()
+  const [searchParams] = useSearchParams()
+  const isDisabled = searchParams.get('reason') === 'disabled'
   const from       = (location.state as { from?: { pathname: string } } | null)
     ?.from?.pathname ?? '/dashboard'
 
@@ -89,6 +91,18 @@ export function LoginPage() {
             <p className="mt-1 text-sm text-gray-500">Sign in to your workspace</p>
           </div>
         </div>
+
+        {/* Disabled account banner */}
+        {isDisabled && (
+          <div className="flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3">
+            <svg className="mt-0.5 h-4 w-4 shrink-0 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+            </svg>
+            <p className="text-sm text-rose-700">
+              Your account has been disabled. Contact your administrator.
+            </p>
+          </div>
+        )}
 
         {/* Card */}
         <div className="rounded-2xl border border-gray-200 bg-white px-8 py-10 shadow-sm">
