@@ -180,6 +180,7 @@ export function AgentsPage() {
 
   const [showInvite,  setShowInvite]  = useState(false)
   const [disabling,   setDisabling]   = useState<string | null>(null)
+  const [enabling,    setEnabling]    = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
   const [successMsg,  setSuccessMsg]  = useState<string | null>(null)
 
@@ -203,6 +204,29 @@ export function AgentsPage() {
       setActionError(`Failed to disable agent: ${err.message}`)
     } else {
       setSuccessMsg(`${agent.full_name ?? 'Agent'} has been disabled.`)
+      refetch()
+      setTimeout(() => setSuccessMsg(null), 3000)
+    }
+  }
+
+  const handleEnable = async (agent: Profile) => {
+    if (!window.confirm(`Re-enable ${agent.full_name ?? agent.user_id}? They will be able to sign in again.`)) return
+
+    setEnabling(agent.id)
+    setActionError(null)
+
+    const { error: err } = await supabase
+      .from('profiles')
+      .update({ is_active: true })
+      .eq('id', agent.id)
+      .eq('tenant_id', tenantId!)
+
+    setEnabling(null)
+
+    if (err) {
+      setActionError(`Failed to re-enable agent: ${err.message}`)
+    } else {
+      setSuccessMsg(`${agent.full_name ?? 'Agent'} has been re-enabled.`)
       refetch()
       setTimeout(() => setSuccessMsg(null), 3000)
     }
@@ -337,8 +361,14 @@ export function AgentsPage() {
                             {disabling === agent.id ? 'Disabling…' : 'Disable'}
                           </button>
                         )}
-                        {!agent.is_active && (
-                          <span className="text-xs text-gray-600">Disabled</span>
+                        {!agent.is_active && agent.user_id !== profile?.user_id && (
+                          <button
+                            onClick={() => handleEnable(agent)}
+                            disabled={enabling === agent.id}
+                            className="rounded-lg border border-gray-200 px-3 py-1 text-xs font-medium text-gray-400 transition hover:border-emerald-500/40 hover:bg-emerald-500/10 hover:text-emerald-400 disabled:opacity-50"
+                          >
+                            {enabling === agent.id ? 'Enabling…' : 'Re-enable'}
+                          </button>
                         )}
                         {agent.user_id === profile?.user_id && (
                           <span className="text-xs text-gray-600">You</span>
