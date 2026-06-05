@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Logo } from '../../components/Logo'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { supabaseConfigured } from '../../lib/supabase'
@@ -78,13 +79,15 @@ export function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-sm space-y-8">
 
-        {/* Wordmark */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight">
-            <span className="text-indigo-600">Lead</span>
-            <span className="text-gray-900">Pilot</span>
-          </h1>
-          <p className="mt-2 text-sm text-gray-500">Sign in to your workspace</p>
+        {/* Logo */}
+        <div className="flex flex-col items-center gap-3">
+          <Logo size="lg" showText={false} />
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Lead<span className="text-emerald-500">Pilot</span>
+            </h1>
+            <p className="mt-1 text-sm text-gray-500">Sign in to your workspace</p>
+          </div>
         </div>
 
         {/* Card */}

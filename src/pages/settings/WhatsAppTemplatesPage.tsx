@@ -11,8 +11,8 @@ const VARIABLES = [
   '{{followup_date}}', '{{email}}', '{{whatsapp}}',
 ]
 
-const inputCls    = 'w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-const textareaCls = 'w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 resize-none'
+const inputCls    = 'w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500'
+const textareaCls = 'w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none'
 
 // ─── Template form ─────────────────────────────────────────────────────────
 
@@ -79,7 +79,7 @@ function TemplateForm({ initial, onSave, onCancel, submitLabel }: TemplateFormPr
               key={v}
               type="button"
               onClick={() => insertVar(v)}
-              className="rounded-full border border-gray-700 bg-gray-800 px-2.5 py-0.5 text-xs text-gray-300 transition hover:bg-gray-700 hover:text-white"
+              className="rounded-full border border-gray-200 bg-gray-100 px-2.5 py-0.5 text-xs text-gray-600 transition hover:bg-gray-200"
             >
               {v}
             </button>
@@ -94,14 +94,14 @@ function TemplateForm({ initial, onSave, onCancel, submitLabel }: TemplateFormPr
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-medium text-gray-300 transition hover:bg-gray-800"
+          className="flex-1 rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={!name.trim() || !message.trim()}
-          className="flex-1 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:opacity-50"
+          className="flex-1 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
         >
           {submitLabel}
         </button>
@@ -158,7 +158,7 @@ export function WhatsAppTemplatesPage() {
         {/* Header */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-white">WhatsApp Templates</h1>
+            <h1 className="text-xl font-semibold text-gray-900">WhatsApp Templates</h1>
             <p className="mt-0.5 text-sm text-gray-500">
               Reusable message templates with variable substitution. Stored on this device.
             </p>
@@ -178,14 +178,14 @@ export function WhatsAppTemplatesPage() {
 
         {/* Add form */}
         {showAdd && (
-          <div className="mb-6 rounded-2xl border border-emerald-500/30 bg-gray-900 p-6">
-            <h2 className="mb-4 text-sm font-semibold text-white">New template</h2>
+          <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+            <h2 className="mb-4 text-sm font-semibold text-gray-900">New template</h2>
             <TemplateForm submitLabel="Add template" onSave={handleAdd} onCancel={() => setShowAdd(false)} />
           </div>
         )}
 
         {/* Template list */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900">
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
           {templates.length === 0 ? (
             <div className="py-16 text-center">
               <p className="text-sm text-gray-500">No templates yet.</p>
@@ -197,7 +197,7 @@ export function WhatsAppTemplatesPage() {
                 <li key={tmpl.id}>
                   {editing?.id === tmpl.id ? (
                     <div className="p-5">
-                      <h3 className="mb-4 text-sm font-semibold text-white">Edit template</h3>
+                      <h3 className="mb-4 text-sm font-semibold text-gray-900">Edit template</h3>
                       <TemplateForm
                         initial={tmpl}
                         submitLabel="Save changes"
@@ -209,7 +209,7 @@ export function WhatsAppTemplatesPage() {
                     <div className="p-5">
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-white">{tmpl.name}</p>
+                          <p className="text-sm font-semibold text-gray-900">{tmpl.name}</p>
                           {preview === tmpl.id ? (
                             <p className="mt-1.5 whitespace-pre-wrap text-xs text-gray-400 leading-relaxed">
                               {tmpl.message}
@@ -221,7 +221,7 @@ export function WhatsAppTemplatesPage() {
                         <div className="flex shrink-0 items-center gap-1">
                           <button
                             onClick={() => setPreview(prev => prev === tmpl.id ? null : tmpl.id)}
-                            className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-800 hover:text-white"
+                            className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
                             title="Preview"
                           >
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -231,7 +231,7 @@ export function WhatsAppTemplatesPage() {
                           </button>
                           <button
                             onClick={() => { setEditing(tmpl); setShowAdd(false) }}
-                            className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-800 hover:text-white"
+                            className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
                             title="Edit"
                           >
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -258,7 +258,7 @@ export function WhatsAppTemplatesPage() {
         </div>
 
         {/* Variable reference */}
-        <div className="mt-4 rounded-xl border border-gray-800 bg-gray-900/50 p-4">
+        <div className="mt-4 rounded-xl border border-gray-100 bg-gray-50 p-4">
           <p className="text-xs font-semibold text-gray-500 mb-2">Available variables</p>
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600">
             {[...VARIABLES, '{{custom_field_key}}'].map(v => (

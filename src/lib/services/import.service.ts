@@ -15,6 +15,7 @@ export type CsvFieldMapping =
   | 'status'
   | 'assigned_agent'
   | 'skip'
+  | 'ignore'
 
 export interface ColumnMap {
   [csvHeader: string]: CsvFieldMapping
@@ -199,6 +200,7 @@ interface ExtractedRow {
   notes:           string
   status:          LeadStatus
   assigned_agent:  string   // raw name from CSV — resolved to UUID later
+  custom_data:     Record<string, string> | null
 }
 
 export function extractRow(
@@ -210,6 +212,22 @@ export function extractRow(
     return header ? (row[header] ?? '') : ''
   }
 
+  // Collect any CSV columns that were not mapped to standard fields
+  // These become custom_data and will appear in Google Sheets as extra columns
+  const mappedHeaders = new Set(
+    Object.entries(mapping)
+      .filter(([, f]) => f !== 'ignore')
+      .map(([h]) => h)
+  )
+  const customData: Record<string, string> = {}
+  Object.entries(row).forEach(([header, value]) => {
+    if (!mappedHeaders.has(header) && value.trim()) {
+      // Convert header to a clean field_key: lowercase, underscores
+      const key = header.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '')
+      if (key) customData[key] = value.trim()
+    }
+  })
+
   return {
     name:           get('name').trim(),
     phone:          normalisePhone(get('phone')),
@@ -218,6 +236,7 @@ export function extractRow(
     notes:          get('notes').trim(),
     status:         normaliseStatus(get('status')),
     assigned_agent: get('assigned_agent').trim(),
+    custom_data:    Object.keys(customData).length > 0 ? customData : null,
   }
 }
 
@@ -405,6 +424,7 @@ export async function runImport(opts: RunImportOptions): Promise<ImportResult> {
           assigned_agent_id: agentId,
           pipeline_stage_id: null,
           followup_date:     null,
+          custom_data:       extracted.custom_data ?? null,
         })
 
         // Register in in-file Sets after successful insert

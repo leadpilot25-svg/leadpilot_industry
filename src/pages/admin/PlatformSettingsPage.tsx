@@ -38,8 +38,7 @@ export function PlatformSettingsPage() {
 
         {/* Deployment mode */}
         <div
-          className="rounded-2xl p-6 space-y-5"
-          className="rounded-2xl bg-white border border-gray-200 shadow-sm p-6 space-y-5"
+          className="rounded-2xl p-6 space-y-5 bg-white border border-gray-200 shadow-sm"
         >
           <div>
             <h2 className="text-sm font-semibold text-gray-900">Deployment Mode</h2>
@@ -122,8 +121,7 @@ export function PlatformSettingsPage() {
 
         {/* Role responsibilities reference */}
         <div
-          className="rounded-2xl p-6 space-y-4"
-          className="rounded-2xl bg-white border border-gray-200 shadow-sm p-6 space-y-5"
+          className="rounded-2xl p-6 space-y-4 bg-white border border-gray-200 shadow-sm space-y-5"
         >
           <h2 className="text-sm font-semibold text-gray-900">Role Responsibilities</h2>
           <div className="space-y-4">
@@ -152,7 +150,6 @@ export function PlatformSettingsPage() {
             ].map(r => (
               <div
                 key={r.role}
-                className="rounded-xl p-4"
                 className="rounded-xl p-4 bg-gray-50 border border-gray-100"
               >
                 <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: r.color }}>{r.role}</p>

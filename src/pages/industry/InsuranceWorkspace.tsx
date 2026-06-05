@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { useLeads } from '../../hooks/useLeads'
@@ -48,6 +48,28 @@ function Section({ title, count, extra, children }: { title: string; count: numb
 
 function EmptyRow({ cols, msg }: { cols: number; msg: string }) {
   return <tr><td colSpan={cols} className="px-4 py-10 text-center text-sm text-gray-400">{msg}</td></tr>
+}
+
+
+// ─── Zero-state guidance card ─────────────────────────────────────────────────
+
+function GuidanceCard() {
+  return (
+    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center space-y-3">
+      <div className="text-3xl">🏥</div>
+      <div>
+        <p className="text-sm font-semibold text-amber-900">Unlock renewal and premium insights</p>
+        <p className="text-xs text-amber-700 mt-1 leading-relaxed">Add policy details to your leads to see renewal tracking, premium totals, and expiry alerts.</p>
+      </div>
+      <div className="rounded-xl border border-amber-200 bg-white px-3 py-2">
+        <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-wide mb-1">Custom fields to fill</p>
+        <p className="font-mono text-[11px] text-gray-600">policy_expiry_date, premium_amount, policy_status</p>
+      </div>
+      <p className="text-xs text-amber-600">
+        Go to <strong>Leads → Lead Detail</strong> and fill in these fields to unlock insights.
+      </p>
+    </div>
+  )
 }
 
 export function InsuranceWorkspace() {
@@ -107,7 +129,7 @@ export function InsuranceWorkspace() {
       <div className="px-4 py-6 sm:px-6 space-y-6">
 
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Insurance Workspace</h1>
+          <h1 className="text-xl font-semibold text-gray-900">My Business — Insurance</h1>
           <p className="mt-0.5 text-sm text-gray-500">Renewals, premium tracking, and policy management</p>
         </div>
 
@@ -127,7 +149,7 @@ export function InsuranceWorkspace() {
             <div className="flex gap-1">
               {(['30','60','90'] as const).map(d => (
                 <button key={d} onClick={() => setRenewalDays(d)}
-                  className={`rounded px-2.5 py-1 text-xs font-medium transition ${renewalDays === d ? 'bg-emerald-600 text-white' : 'border border-gray-700 text-gray-400 hover:text-white'}`}>
+                  className={`rounded px-2.5 py-1 text-xs font-medium transition ${renewalDays === d ? 'bg-emerald-600 text-white' : 'border border-gray-200 text-gray-500 hover:text-gray-800'}`}>
                   {d}d
                 </button>
               ))}
@@ -145,7 +167,7 @@ export function InsuranceWorkspace() {
                   return (
                     <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-50" onClick={() => navigate(`/leads/${lead.id}`)}>
                       <td className="px-4 py-3">
-                        <p className="text-sm font-medium text-white">{lead.name}</p>
+                        <p className="text-sm font-medium text-gray-900">{lead.name}</p>
                         <p className="text-xs text-gray-500">{lead.phone}</p>
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'policy_type') || '—'}</td>
@@ -198,7 +220,7 @@ export function InsuranceWorkspace() {
                 {!loading && premiumDue.map(lead => (
                   <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-50" onClick={() => navigate(`/leads/${lead.id}`)}>
                     <td className="px-4 py-3">
-                      <p className="text-sm font-medium text-white">{lead.name}</p>
+                      <p className="text-sm font-medium text-gray-900">{lead.name}</p>
                       <p className="text-xs text-gray-500">{lead.phone}</p>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'policy_type') || '—'}</td>
@@ -232,7 +254,7 @@ export function InsuranceWorkspace() {
                 </div>
                 <ul className="space-y-1.5">
                   {group.slice(0, 5).map(l => (
-                    <li key={l.id} className="cursor-pointer rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 hover:border-gray-600 transition"
+                    <li key={l.id} className="cursor-pointer rounded-lg border border-gray-200 bg-white px-3 py-2 hover:border-emerald-300 transition"
                       onClick={() => navigate(`/leads/${l.id}`)}>
                       <p className="text-xs font-medium text-gray-900 truncate">{l.name}</p>
                       <p className="text-xs text-gray-500">{cd(l, 'policy_type') || ''}</p>
@@ -253,7 +275,7 @@ export function InsuranceWorkspace() {
               <tbody className="divide-y divide-gray-100">
                 {agentList.map(a => (
                   <tr key={a.name} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm font-medium text-white">{a.name}</td>
+                    <td className="px-4 py-3 text-sm font-medium text-gray-900">{a.name}</td>
                     <td className="px-4 py-3 text-sm text-gray-700">{a.total}</td>
                     <td className="px-4 py-3 text-sm text-gray-700">{a.issued}</td>
                     <td className="px-4 py-3 text-sm text-gray-700">

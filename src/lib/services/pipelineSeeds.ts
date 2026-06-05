@@ -5,39 +5,15 @@ export const PIPELINE_SEEDS: Record<BusinessType, PipelineSeed> = {
   real_estate: {
     name: 'Real Estate Pipeline',
     stages: [
-      { name: 'New Lead',               color: '#6366F1', sort_order: 1 },
-      { name: 'Contacted',              color: '#8B5CF6', sort_order: 2 },
-      { name: 'Site Visit Scheduled',   color: '#F59E0B', sort_order: 3 },
-      { name: 'Site Visit Completed',   color: '#F97316', sort_order: 4 },
-      { name: 'Negotiation',            color: '#EF4444', sort_order: 5 },
-      { name: 'Booking',                color: '#3B82F6', sort_order: 6 },
-      { name: 'Won',                    color: '#10B981', sort_order: 7 },
-      { name: 'Lost',                   color: '#6B7280', sort_order: 8 },
+      { name: 'New Buyer',   color: '#6366F1', sort_order: 1 },
+      { name: 'Site Visit',  color: '#F59E0B', sort_order: 2 },
+      { name: 'Negotiation', color: '#EF4444', sort_order: 3 },
+      { name: 'Booking',     color: '#3B82F6', sort_order: 4 },
+      { name: 'Closed',      color: '#10B981', sort_order: 5 },
     ],
   },
-  insurance: {
-    name: 'Insurance Pipeline',
-    stages: [
-      { name: 'New Lead',      color: '#6366F1', sort_order: 1 },
-      { name: 'Contacted',     color: '#8B5CF6', sort_order: 2 },
-      { name: 'Quote Sent',    color: '#F59E0B', sort_order: 3 },
-      { name: 'Follow Up',     color: '#F97316', sort_order: 4 },
-      { name: 'Policy Issued', color: '#3B82F6', sort_order: 5 },
-      { name: 'Renewal Due',   color: '#EC4899', sort_order: 6 },
-      { name: 'Renewed',       color: '#10B981', sort_order: 7 },
-    ],
-  },
-  travel: {
-    name: 'Travel Agency Pipeline',
-    stages: [
-      { name: 'New Inquiry',       color: '#6366F1', sort_order: 1 },
-      { name: 'Package Shared',    color: '#8B5CF6', sort_order: 2 },
-      { name: 'Follow Up',         color: '#F59E0B', sort_order: 3 },
-      { name: 'Visa Processing',   color: '#F97316', sort_order: 4 },
-      { name: 'Booking Confirmed', color: '#3B82F6', sort_order: 5 },
-      { name: 'Travel Completed',  color: '#10B981', sort_order: 6 },
-    ],
-  },
+
+
   tarot: {
     name: 'Tarot & Healing Pipeline',
     stages: [
@@ -61,33 +37,52 @@ export const PIPELINE_SEEDS: Record<BusinessType, PipelineSeed> = {
   education: {
     name: 'Education Pipeline',
     stages: [
-      { name: 'New Student',       color: '#6366F1', sort_order: 1 },
-      { name: 'Counselling',       color: '#8B5CF6', sort_order: 2 },
-      { name: 'Demo Class',        color: '#F59E0B', sort_order: 3 },
-      { name: 'Admission Pending', color: '#F97316', sort_order: 4 },
-      { name: 'Enrolled',          color: '#10B981', sort_order: 5 },
+      { name: 'New Student', color: '#6366F1', sort_order: 1 },
+      { name: 'Counseling',  color: '#8B5CF6', sort_order: 2 },
+      { name: 'Application', color: '#F59E0B', sort_order: 3 },
+      { name: 'Admission',   color: '#F97316', sort_order: 4 },
+      { name: 'Enrolled',    color: '#10B981', sort_order: 5 },
+    ],
+  },
+
+  marketing: {
+    name: 'Marketing Agency Pipeline',
+    stages: [
+      { name: 'New Inquiry',    color: '#6366F1', sort_order: 1 },
+      { name: 'Discovery Call', color: '#8B5CF6', sort_order: 2 },
+      { name: 'Proposal Sent',  color: '#F59E0B', sort_order: 3 },
+      { name: 'Active Client',  color: '#3B82F6', sort_order: 4 },
+      { name: 'Retainer',       color: '#10B981', sort_order: 5 },
+    ],
+  },
+  insurance: {
+    name: 'Insurance Pipeline',
+    stages: [
+      { name: 'New Prospect',       color: '#6366F1', sort_order: 1 },
+      { name: 'Quote Sent',         color: '#F59E0B', sort_order: 2 },
+      { name: 'Documents Pending',  color: '#F97316', sort_order: 3 },
+      { name: 'Policy Issued',      color: '#3B82F6', sort_order: 4 },
+      { name: 'Renewal',            color: '#10B981', sort_order: 5 },
     ],
   },
   taxi: {
     name: 'Taxi & Transport Pipeline',
     stages: [
-      { name: 'New Inquiry',       color: '#6366F1', sort_order: 1 },
-      { name: 'Quote Sent',        color: '#8B5CF6', sort_order: 2 },
-      { name: 'Booking Confirmed', color: '#3B82F6', sort_order: 3 },
-      { name: 'Trip Completed',    color: '#10B981', sort_order: 4 },
-      { name: 'Cancelled',         color: '#6B7280', sort_order: 5 },
+      { name: 'New Booking',      color: '#6366F1', sort_order: 1 },
+      { name: 'Driver Assigned',  color: '#F59E0B', sort_order: 2 },
+      { name: 'Pickup Scheduled', color: '#F97316', sort_order: 3 },
+      { name: 'In Trip',          color: '#3B82F6', sort_order: 4 },
+      { name: 'Completed',        color: '#10B981', sort_order: 5 },
     ],
   },
-  marketing: {
-    name: 'Marketing Agency Pipeline',
+  travel: {
+    name: 'Travel Agency Pipeline',
     stages: [
-      { name: 'New Lead',          color: '#6366F1', sort_order: 1 },
-      { name: 'Discovery Call',    color: '#8B5CF6', sort_order: 2 },
-      { name: 'Proposal Sent',     color: '#F59E0B', sort_order: 3 },
-      { name: 'Contract Signed',   color: '#3B82F6', sort_order: 4 },
-      { name: 'Campaign Live',     color: '#F97316', sort_order: 5 },
-      { name: 'Reporting',         color: '#EC4899', sort_order: 6 },
-      { name: 'Retained',          color: '#10B981', sort_order: 7 },
+      { name: 'New Inquiry',    color: '#6366F1', sort_order: 1 },
+      { name: 'Consultation',   color: '#8B5CF6', sort_order: 2 },
+      { name: 'Itinerary Sent', color: '#F59E0B', sort_order: 3 },
+      { name: 'Booking Pending',color: '#F97316', sort_order: 4 },
+      { name: 'Booked',         color: '#10B981', sort_order: 5 },
     ],
   },
   general: {

@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { useWorkspaceSettings } from '../../hooks/useWorkspaceSettings'
+import { Logo } from '../Logo'
+import { BottomNav } from './BottomNav'
 
 const WORKSPACE_ROUTES: Partial<Record<string, string>> = {
   travel:    '/industry/travel',
@@ -14,13 +16,13 @@ const WORKSPACE_ROUTES: Partial<Record<string, string>> = {
 }
 
 const WORKSPACE_LABELS: Partial<Record<string, string>> = {
-  travel:    'Travel Workspace',
-  taxi:      'Taxi Workspace',
-  insurance: 'Insurance Workspace',
-  education: 'Education Workspace',
-  marketing: 'Marketing Workspace',
-  tarot:     'Tarot Workspace',
-  coach:     'Coaching Workspace',
+  travel:    'My Business',
+  taxi:      'My Business',
+  insurance: 'My Business',
+  education: 'My Business',
+  marketing: 'My Business',
+  tarot:     'My Business',
+  coach:     'My Business',
 }
 
 interface AppLayoutProps { children: React.ReactNode }
@@ -52,6 +54,21 @@ const navItems = [
   },
 ]
 
+const subNavItems = [
+  {
+    to: '/settings/public-form', label: 'Public Form',
+    icon: <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}><path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>,
+  },
+  {
+    to: '/settings/custom-fields', label: 'Custom Fields',
+    icon: <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" /></svg>,
+  },
+  {
+    to: '/settings/templates', label: 'Templates',
+    icon: <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}><path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>,
+  },
+]
+
 function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { profile, signOut } = useAuth()
   const navigate = useNavigate()
@@ -77,16 +94,8 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
       ].join(' ')}>
 
         {/* Logo */}
-        <div className="flex h-16 shrink-0 items-center gap-3 px-5 border-b border-gray-100">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M22 2L11 13" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-          <span className="text-[16px] font-bold text-gray-900">
-            Lead<span className="text-emerald-500">Pilot</span>
-          </span>
+        <div className="flex h-16 shrink-0 items-center px-5 border-b border-gray-100">
+          <Logo size="md" />
         </div>
 
         {/* Nav */}
@@ -108,9 +117,29 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
             </NavLink>
           ))}
 
+          {/* Settings sub-nav */}
+          <div className="mt-1 ml-3 pl-3 border-l border-gray-100 space-y-0.5">
+            {subNavItems.map(item => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                onClick={onClose}
+                className={({ isActive }) => [
+                  'flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium transition-all duration-150',
+                  isActive
+                    ? 'bg-emerald-50 text-emerald-700'
+                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800',
+                ].join(' ')}
+              >
+                <span className="shrink-0">{item.icon}</span>
+                {item.label}
+              </NavLink>
+            ))}
+          </div>
+
           {workspaceRoute && workspaceLabel && (
             <div className="mt-4 pt-4 border-t border-gray-100">
-              <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-gray-400">Workspace</p>
+              <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-gray-400">My Business</p>
               <NavLink
                 to={workspaceRoute}
                 onClick={onClose}
@@ -153,7 +182,7 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
 function MobileTopBar({ onMenuClick }: { onMenuClick: () => void }) {
   return (
     <header className="flex h-14 shrink-0 items-center justify-between bg-white border-b border-gray-200 px-4 lg:hidden">
-      <span className="text-[15px] font-bold text-gray-900">Lead<span className="text-emerald-500">Pilot</span></span>
+      <Logo size="sm" />
       <button onClick={onMenuClick} className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition">
         <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -171,6 +200,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <div className="flex flex-1 flex-col overflow-hidden">
         <MobileTopBar onMenuClick={() => setSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto">{children}</main>
+        <BottomNav />
       </div>
     </div>
   )

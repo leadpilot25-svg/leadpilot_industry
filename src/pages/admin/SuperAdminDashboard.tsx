@@ -155,8 +155,7 @@ export function SuperAdminDashboard() {
           </div>
           <button
             onClick={() => navigate('/admin/tenants/new')}
-            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5"
-            className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-sm"
+            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 shadow-sm"
           >
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -228,8 +227,7 @@ export function SuperAdminDashboard() {
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
                           <div
-                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
-                            className="bg-emerald-100 text-emerald-700"
+                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white bg-emerald-100 text-emerald-700"
                           >
                             {tenant.name.charAt(0).toUpperCase()}
                           </div>

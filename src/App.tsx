@@ -25,6 +25,10 @@ import { FollowupsPage } from './pages/followups/FollowupsPage'
 import { WorkspaceSettingsPage } from './pages/settings/WorkspaceSettingsPage'
 import { CustomFieldsPage }         from './pages/settings/CustomFieldsPage'
 import { WhatsAppTemplatesPage }    from './pages/settings/WhatsAppTemplatesPage'
+import { TemplatesPage }            from './pages/settings/TemplatesPage'
+import { GoogleSheetsPage }         from './pages/settings/GoogleSheetsPage'
+import { FormBuilderPage }          from './pages/settings/FormBuilderPage'
+import { PublicFormPage }           from './pages/public/PublicFormPage'
 import { PipelinePage }             from './pages/pipeline/PipelinePage'
 import { TravelWorkspace }    from './pages/industry/TravelWorkspace'
 import { TaxiWorkspace }      from './pages/industry/TaxiWorkspace'
@@ -37,6 +41,7 @@ import { CoachingWorkspace }  from './pages/industry/CoachingWorkspace'
 const router = createBrowserRouter([
   // ── Public ──────────────────────────────────────────────────────────────
   { path: '/login',              element: <LoginPage />           },
+  { path: '/f/:slug',            element: <PublicFormPage />      },
   { path: '/forgot-password',    element: <ForgotPasswordPage />  },
   { path: '/auth/reset-password',element: <ResetPasswordPage />   },
   { path: '/auth/accept-invite', element: <AcceptInvitePage /> },
@@ -106,7 +111,10 @@ const router = createBrowserRouter([
       { path: '/agents',             element: <AgentsPage />       },
       { path: '/settings',           element: <WorkspaceSettingsPage /> },
       { path: '/settings/custom-fields',       element: <CustomFieldsPage /> },
-      { path: '/settings/whatsapp-templates',   element: <WhatsAppTemplatesPage /> },
+      { path: '/settings/public-form',          element: <FormBuilderPage /> },
+      { path: '/settings/templates',            element: <TemplatesPage /> },
+      { path: '/settings/whatsapp-templates',   element: <TemplatesPage /> },
+      { path: '/settings/google-sheets',        element: <GoogleSheetsPage /> },
     ],
   },
 

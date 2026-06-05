@@ -25,9 +25,9 @@ const FIELD_TYPES: { value: CustomFieldType; label: string; description: string 
   { value: 'multi_select', label: 'Multi-select',   description: 'Choose multiple options'   },
 ]
 
-const inputCls    = 'w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-const selectCls   = 'w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-const checkboxCls = 'h-4 w-4 rounded border-gray-700 bg-gray-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-gray-900'
+const inputCls    = 'w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500'
+const selectCls   = 'w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500'
+const checkboxCls = 'h-4 w-4 rounded border-gray-300 bg-white text-emerald-600 focus:ring-emerald-500'
 
 // ─── Field form ───────────────────────────────────────────────────────────────
 
@@ -192,14 +192,14 @@ function FieldForm({ initial, submitLabel, onSubmit, onCancel }: FieldFormProps)
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-medium text-gray-300 transition hover:bg-gray-800 hover:text-white"
+          className="flex-1 rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={saving || !form.field_label.trim()}
-          className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:opacity-50"
+          className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
         >
           {saving && <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />}
           {saving ? 'Saving…' : submitLabel}
@@ -213,7 +213,7 @@ function FieldForm({ initial, submitLabel, onSubmit, onCancel }: FieldFormProps)
 
 function FieldPreview({ field }: { field: CustomField }) {
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+    <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
       <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">Preview</p>
       <div>
         <label className="block text-xs font-medium text-gray-400 mb-1">
@@ -317,7 +317,7 @@ export function CustomFieldsPage() {
         {/* Header */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-white">Custom fields</h1>
+            <h1 className="text-xl font-semibold text-gray-900">Custom fields</h1>
             <p className="mt-0.5 text-sm text-gray-500">
               Add extra fields to your lead forms. Values are saved per lead.
             </p>
@@ -325,7 +325,7 @@ export function CustomFieldsPage() {
           {!showAdd && !editing && (
             <button
               onClick={() => { setShowAdd(true); setPreviewField(null) }}
-              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
+              className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700"
             >
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -337,8 +337,8 @@ export function CustomFieldsPage() {
 
         {/* Inline add form */}
         {showAdd && (
-          <div className="mb-6 rounded-2xl border border-indigo-500/30 bg-gray-900 p-6">
-            <h2 className="mb-4 text-sm font-semibold text-white">New field</h2>
+          <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+            <h2 className="mb-4 text-sm font-semibold text-gray-900">New field</h2>
             <FieldForm
               initial={EMPTY_FORM}
               submitLabel="Add field"
@@ -356,7 +356,7 @@ export function CustomFieldsPage() {
         )}
 
         {/* Field list */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900">
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
 
           {loading && (
             <div className="flex items-center justify-center py-12">
@@ -380,7 +380,7 @@ export function CustomFieldsPage() {
                   {/* Edit inline */}
                   {editing?.id === field.id ? (
                     <div className="p-5">
-                      <h3 className="mb-4 text-sm font-semibold text-white">Edit field</h3>
+                      <h3 className="mb-4 text-sm font-semibold text-gray-900">Edit field</h3>
                       <FieldForm
                         initial={{
                           field_label:  field.field_label,
@@ -425,8 +425,8 @@ export function CustomFieldsPage() {
                       {/* Field info */}
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-sm font-medium text-white">{field.field_label}</span>
-                          <span className="rounded-full bg-gray-800 px-2 py-0.5 text-xs text-gray-400 capitalize">
+                          <span className="text-sm font-medium text-gray-900">{field.field_label}</span>
+                          <span className="rounded-full bg-gray-100 border border-gray-200 px-2 py-0.5 text-xs text-gray-500 capitalize">
                             {FIELD_TYPES.find(f => f.value === field.field_type)?.label ?? field.field_type}
                           </span>
                           {field.required && (
@@ -448,7 +448,7 @@ export function CustomFieldsPage() {
                       <div className="flex shrink-0 items-center gap-1">
                         <button
                           onClick={() => setPreviewField(prev => prev?.id === field.id ? null : field)}
-                          className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-800 hover:text-white"
+                          className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
                           title="Preview"
                         >
                           <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -458,7 +458,7 @@ export function CustomFieldsPage() {
                         </button>
                         <button
                           onClick={() => { setEditing(field); setShowAdd(false) }}
-                          className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-800 hover:text-white"
+                          className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
                           title="Edit"
                         >
                           <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -481,7 +481,7 @@ export function CustomFieldsPage() {
 
                   {/* Preview pane inline */}
                   {previewField?.id === field.id && editing?.id !== field.id && (
-                    <div className="border-t border-gray-800 px-5 pb-5 pt-3">
+                    <div className="border-t border-gray-100 px-5 pb-5 pt-3">
                       <FieldPreview field={field} />
                     </div>
                   )}

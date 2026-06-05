@@ -118,8 +118,7 @@ export function TenantsPage() {
           </div>
           <button
             onClick={() => navigate('/admin/tenants/new')}
-            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5"
-            className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-sm"
+            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 shadow-sm"
           >
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -142,7 +141,7 @@ export function TenantsPage() {
               className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none"
             />
           </div>
-          <div className="flex gap-1 rounded-xl p-1" className="bg-gray-100 rounded-xl p-1">
+          <div className="flex gap-1 rounded-xl bg-gray-100 p-1">
             {(['all', 'active', 'suspended'] as const).map(f => (
               <button
                 key={f}
@@ -158,12 +157,11 @@ export function TenantsPage() {
 
         {/* Table */}
         <div
-          className="rounded-2xl overflow-hidden"
           className="rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm"
         >
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <div className="h-7 w-7 animate-spin rounded-full border-4 border-t-transparent" className="h-7 w-7 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
+              <div className="h-7 w-7 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
             </div>
           ) : filtered.length === 0 ? (
             <div className="py-20 text-center">
@@ -183,8 +181,7 @@ export function TenantsPage() {
                   {filtered.map(tenant => (
                     <tr
                       key={tenant.id}
-                      className="border-b border-gray-50"
-                      className="transition-colors hover:bg-gray-50"
+                      className="border-b border-gray-50 transition-colors hover:bg-gray-50"
                     >
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate(`/admin/tenants/${tenant.id}`)}>

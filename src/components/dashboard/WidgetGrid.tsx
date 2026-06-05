@@ -1,3 +1,4 @@
+import React from 'react'
 import { StatCard } from './StatCard'
 import { getWidgetsForIndustry, type AccentColor } from '../../lib/services/widgetConfig'
 import type { DashboardStats } from '../../types/lead'
@@ -64,9 +65,10 @@ const ACCENT_MAP: Record<AccentColor, 'emerald' | 'amber' | 'rose' | 'blue'> = {
   amber:   'amber',
   emerald: 'emerald',
   rose:    'rose',
-  sky:     'blue',      // taxi uses sky → maps to blue
-  violet:  'blue',      // tarot uses violet → maps to blue
-  orange:  'amber',      // marketing uses orange → maps to amber
+  sky:     'blue',
+  violet:  'blue',
+  orange:  'amber',
+  blue:    'blue',
 }
 
 // ─── WidgetGrid ───────────────────────────────────────────────────────────────
@@ -94,7 +96,7 @@ export function WidgetGrid({ stats, loading, businessType }: WidgetGridProps) {
           label={widget.label}
           value={stats ? widget.getValue(stats) : 0}
           icon={ICON_MAP[widget.icon]}
-          accent={ACCENT_MAP[widget.accent]}
+          accent={ACCENT_MAP[widget.accent] as 'emerald' | 'amber' | 'rose' | 'blue'}
           loading={loading}
           href={widget.href}
         />

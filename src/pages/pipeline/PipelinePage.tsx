@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useRef } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { useLeads } from '../../hooks/useLeads'
 import { usePipelineStages } from '../../hooks/usePipelineStages'
@@ -29,7 +29,7 @@ function AnalyticsStrip({ leads }: { leads: Lead[] }) {
   const conversion = leads.length > 0 ? Math.round((won.length / leads.length) * 100) : 0
 
   const cards = [
-    { label: 'Total Leads',   value: leads.length,   color: 'text-indigo-400',  border: 'border-indigo-500/20',  bg: 'bg-indigo-500/10' },
+    { label: 'Total Leads',   value: leads.length,   color: 'text-emerald-600',  border: 'border-emerald-500/20',  bg: 'bg-emerald-500/10' },
     { label: 'Active',        value: active.length,  color: 'text-sky-400',     border: 'border-sky-500/20',     bg: 'bg-sky-500/10'    },
     { label: 'Won',           value: won.length,     color: 'text-emerald-400', border: 'border-emerald-500/20', bg: 'bg-emerald-500/10'},
     { label: 'Lost',          value: lost.length,    color: 'text-rose-400',    border: 'border-rose-500/20',    bg: 'bg-rose-500/10'   },
@@ -64,17 +64,17 @@ function LeadCard({ lead, onDragStart, onClick }: LeadCardProps) {
       draggable
       onDragStart={e => onDragStart(e, lead.id)}
       onClick={onClick}
-      className="cursor-pointer rounded-xl border border-gray-700 bg-gray-900 p-3 shadow-sm select-none transition-all hover:border-gray-600 hover:shadow-md active:opacity-70"
+      className="cursor-pointer rounded-xl border border-gray-200 bg-white p-3 shadow-sm select-none transition-all hover:border-gray-300 hover:shadow-md active:opacity-70"
     >
       <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-medium text-white leading-snug line-clamp-2">{lead.name}</p>
+        <p className="text-sm font-medium text-gray-900 leading-snug line-clamp-2">{lead.name}</p>
         <AgeBadge days={days} />
       </div>
       {(lead.phone ?? lead.whatsapp) && (
         <p className="mt-1 text-xs text-gray-500">{lead.phone ?? lead.whatsapp}</p>
       )}
       {lead.source && (
-        <span className="mt-2 inline-flex items-center rounded-full bg-gray-800 px-2 py-0.5 text-xs text-gray-500 capitalize">
+        <span className="mt-2 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500 capitalize">
           {lead.source}
         </span>
       )}
@@ -87,9 +87,9 @@ function LeadCard({ lead, onDragStart, onClick }: LeadCardProps) {
 interface ColumnProps {
   stage:    PipelineStage
   leads:    Lead[]
-  onDrop:   (stageId: string) => void
+  onDrop:   (stageId: string) => void | Promise<void>
   onDragStart: (e: React.DragEvent, leadId: string) => void
-  onCardClick: (leadId: string) => void
+  onCardClick: (leadId: string) => void | unknown
 }
 
 function Column({ stage, leads, onDrop, onDragStart, onCardClick }: ColumnProps) {
@@ -116,8 +116,8 @@ function Column({ stage, leads, onDrop, onDragStart, onCardClick }: ColumnProps)
           className="h-2.5 w-2.5 shrink-0 rounded-full"
           style={{ backgroundColor: stage.color }}
         />
-        <span className="text-sm font-semibold text-white truncate">{stage.name}</span>
-        <span className="ml-auto shrink-0 rounded-full bg-gray-800 px-2 py-0.5 text-xs text-gray-400">
+        <span className="text-sm font-semibold text-gray-800 truncate">{stage.name}</span>
+        <span className="ml-auto shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600 font-medium">
           {leads.length}
         </span>
       </div>
@@ -130,8 +130,8 @@ function Column({ stage, leads, onDrop, onDragStart, onCardClick }: ColumnProps)
         className={[
           'flex-1 rounded-2xl border-2 p-2 space-y-2 min-h-[200px] transition-colors',
           isOver
-            ? 'border-indigo-500 bg-indigo-500/5'
-            : 'border-dashed border-gray-800 bg-gray-900/30',
+            ? 'border-emerald-500 bg-emerald-500/5'
+            : 'border-dashed border-gray-200 bg-gray-50',
         ].join(' ')}
       >
         {leads.map(lead => (
@@ -169,7 +169,7 @@ function UnassignedColumn({
       <div className="mb-3 flex items-center gap-2 px-1">
         <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-gray-600" />
         <span className="text-sm font-semibold text-gray-400">No Stage</span>
-        <span className="ml-auto shrink-0 rounded-full bg-gray-800 px-2 py-0.5 text-xs text-gray-500">
+        <span className="ml-auto shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500 font-medium">
           {leads.length}
         </span>
       </div>
@@ -179,7 +179,7 @@ function UnassignedColumn({
         onDrop={e => { e.preventDefault(); setIsOver(false); onDrop('') }}
         className={[
           'flex-1 rounded-2xl border-2 p-2 space-y-2 min-h-[200px] transition-colors',
-          isOver ? 'border-gray-500 bg-gray-700/10' : 'border-dashed border-gray-800 bg-gray-900/30',
+          isOver ? 'border-emerald-300 bg-emerald-50/50' : 'border-dashed border-gray-200 bg-gray-50',
         ].join(' ')}
       >
         {leads.map(lead => (
@@ -200,6 +200,8 @@ function UnassignedColumn({
 export function PipelinePage() {
   const { profile }  = useAuth()
   const navigate     = useNavigate()
+  const [searchParams] = useSearchParams()
+  const highlightStageId = searchParams.get('stage')
   const tenantId     = profile?.tenant_id ?? null
 
   const { leads, loading: leadsLoading, refetch } = useLeads(tenantId)
@@ -267,11 +269,11 @@ export function PipelinePage() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-white">Pipeline Board</h1>
+            <h1 className="text-xl font-semibold text-gray-900">Pipeline Board</h1>
             <p className="mt-0.5 text-sm text-gray-500">Drag leads between stages to update their position.</p>
           </div>
           <div className="relative w-full sm:w-64">
-            <svg width="16" height="16" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+            <svg width="16" height="16" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
@@ -280,7 +282,7 @@ export function PipelinePage() {
               placeholder="Search leads…"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 py-2 pl-9 pr-3 text-sm text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none"
+              className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none"
             />
           </div>
         </div>
@@ -290,8 +292,8 @@ export function PipelinePage() {
 
         {/* Moving indicator */}
         {moving && (
-          <div className="flex items-center gap-2 rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-4 py-2 text-sm text-indigo-400">
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-indigo-400 border-t-transparent" />
+          <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-700">
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
             Moving lead…
           </div>
         )}
@@ -299,7 +301,7 @@ export function PipelinePage() {
         {/* Loading */}
         {loading && (
           <div className="flex items-center justify-center py-24">
-            <div className="h-7 w-7 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+            <div className="h-7 w-7 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
           </div>
         )}
 
@@ -309,21 +311,29 @@ export function PipelinePage() {
             <div className="flex gap-4" style={{ minWidth: `${(stages.length + 1) * 256}px` }}>
 
               {stages.map(stage => (
-                <Column
+                <div
                   key={stage.id}
-                  stage={stage}
-                  leads={leadsByStage[stage.id] ?? []}
-                  onDrop={handleDrop}
-                  onDragStart={handleDragStart}
-                  onCardClick={id => navigate(`/leads/${id}`)}
-                />
+                  className={`rounded-2xl transition-all duration-300 ${
+                    highlightStageId === stage.id
+                      ? 'ring-2 ring-emerald-400 ring-offset-2'
+                      : ''
+                  }`}
+                >
+                  <Column
+                    stage={stage}
+                    leads={leadsByStage[stage.id] ?? []}
+                    onDrop={handleDrop}
+                    onDragStart={handleDragStart}
+                    onCardClick={(id: string) => { navigate(`/leads/${id}`) }}
+                  />
+                </div>
               ))}
 
               <UnassignedColumn
                 leads={unassigned}
                 onDrop={handleDrop}
                 onDragStart={handleDragStart}
-                onCardClick={id => navigate(`/leads/${id}`)}
+                onCardClick={(id: string) => { navigate(`/leads/${id}`) }}
               />
 
             </div>
@@ -331,7 +341,7 @@ export function PipelinePage() {
         )}
 
         {!loading && stages.length === 0 && (
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 py-16 text-center">
+          <div className="rounded-2xl border border-gray-200 bg-white py-16 text-center shadow-sm">
             <p className="text-sm text-gray-500">No pipeline stages found.</p>
             <p className="mt-1 text-xs text-gray-600">Complete onboarding or add stages in your pipeline settings.</p>
           </div>

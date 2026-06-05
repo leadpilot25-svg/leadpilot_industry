@@ -1,5 +1,8 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useVocab } from '../../lib/services/industryVocab'
+import { getIndustryFields } from '../../lib/services/industryLeadFields'
+import { useWorkspaceSettings } from '../../hooks/useWorkspaceSettings'
 import { useAuth } from '../../hooks/useAuth'
 import { useAgents } from '../../hooks/useAgents'
 import { fetchLeadById, updateLead } from '../../lib/services/leads.service'
@@ -30,8 +33,13 @@ function leadToForm(lead: Lead): LeadFormData {
 export function EditLeadPage() {
   const { id }   = useParams<{ id: string }>()
   const navigate  = useNavigate()
+  const vocab = useVocab()
   const { profile } = useAuth()
   const tenantId  = profile?.tenant_id ?? null
+
+  const { settings } = useWorkspaceSettings(tenantId)
+  const businessType = settings?.business_type ?? null
+  const industryFields = getIndustryFields(businessType)
 
   const { agents } = useAgents(tenantId)
   const { fields: customFields } = useCustomFields(tenantId, 'lead')
@@ -61,6 +69,13 @@ export function EditLeadPage() {
       .order('sort_order')
       .then(({ data }) => setStages((data ?? []) as PipelineStage[]))
   }, [tenantId])
+
+  const handleIndustryChange = (key: string, value: string) => {
+    setCustomData(prev => ({ ...prev, [key]: value }))
+    if (key === 'pickup_datetime') {
+      setForm(prev => prev ? { ...prev, followup_date: value } : prev)
+    }
+  }
 
   const handleChange = (field: keyof LeadFormData, value: string) => {
     setForm(prev => prev ? { ...prev, [field]: value } : prev)
@@ -109,7 +124,7 @@ export function EditLeadPage() {
     return (
       <AppLayout>
         <div className="flex h-full items-center justify-center">
-          <div className="h-6 w-6 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+          <div className="h-6 w-6 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
         </div>
       </AppLayout>
     )
@@ -122,20 +137,20 @@ export function EditLeadPage() {
         <div className="mb-6 flex items-center gap-3">
           <button
             onClick={() => navigate(`/leads/${id}`)}
-            className="rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-800 hover:text-white"
+            className="rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
           >
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
           </button>
           <div>
-            <h1 className="text-xl font-semibold text-white">Edit lead</h1>
+            <h1 className="text-xl font-semibold text-gray-900">{`Edit ${vocab.lead.charAt(0).toUpperCase() + vocab.lead.slice(1)}`}</h1>
             <p className="text-sm text-gray-500 truncate">{lead.name}</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-6">
+          <div className="rounded-2xl border border-gray-100 bg-white p-6">
             <LeadFormFields
               data={form}
               onChange={handleChange}
@@ -147,8 +162,46 @@ export function EditLeadPage() {
             />
           </div>
 
+          {/* Industry-specific fields */}
+          {industryFields.length > 0 && (
+            <div className="mt-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">
+                {businessType === 'taxi' ? 'Trip Details' : 'Additional Details'}
+              </p>
+              <div className="space-y-3">
+                {industryFields.map(field => (
+                  <div key={field.key}>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                      {field.label}{field.required && ' *'}
+                    </label>
+                    {field.type === 'select' ? (
+                      <select
+                        value={String(customData[field.key] ?? '')}
+                        onChange={e => handleIndustryChange(field.key, e.target.value)}
+                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none"
+                      >
+                        <option value="">{field.placeholder}</option>
+                        {field.options?.map(o => (
+                          <option key={o} value={o}>{o}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type={field.type}
+                        value={String(customData[field.key] ?? '')}
+                        onChange={e => handleIndustryChange(field.key, e.target.value)}
+                        placeholder={field.placeholder}
+                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {saveError && (
-            <div className="mt-4 rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-400">
+            <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-600">
               {saveError}
             </div>
           )}
@@ -157,14 +210,14 @@ export function EditLeadPage() {
             <button
               type="button"
               onClick={() => navigate(`/leads/${id}`)}
-              className="flex-1 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-medium text-gray-300 transition hover:bg-gray-800 hover:text-white"
+              className="flex-1 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting || !form.name.trim()}
-              className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
             >
               {submitting && (
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />

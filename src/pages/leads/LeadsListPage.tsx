@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useVocab } from '../../lib/services/industryVocab'
 import { useAuth } from '../../hooks/useAuth'
 import { useLeads } from '../../hooks/useLeads'
 import { useAgents } from '../../hooks/useAgents'
 import { usePipelineStages } from '../../hooks/usePipelineStages'
-import { softDeleteLead, updateLead } from '../../lib/services/leads.service'
+import { softDeleteLead, updateLead, resolveFilterParam } from '../../lib/services/leads.service'
 import { AppLayout } from '../../components/layout/AppLayout'
 import { LeadStatusBadge } from '../../components/leads/LeadStatusBadge'
 import type { Lead, LeadStatus } from '../../types/lead'
@@ -83,9 +84,9 @@ function BulkActionBar({ selected, leads, tenantId, onDone, stages, agents, isAd
 
   return (
     <div className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2">
-      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-gray-700 bg-gray-950 px-4 py-3 shadow-2xl">
-        <span className="text-sm font-semibold text-white">{count} selected</span>
-        <div className="h-4 w-px bg-gray-700" />
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 py-3 shadow-xl">
+        <span className="text-sm font-semibold text-gray-900">{count} selected</span>
+        <div className="h-4 w-px bg-gray-200" />
 
         {/* Change status */}
         <select
@@ -95,9 +96,9 @@ function BulkActionBar({ selected, leads, tenantId, onDone, stages, agents, isAd
             const v = e.target.value as LeadStatus
             if (!v) return
             e.target.value = ''
-            run(lead => updateLead({ id: lead.id, tenant_id: tenantId, status: v }))
+            run(lead => updateLead({ id: lead.id, tenant_id: tenantId, status: v }).then(() => {}))
           }}
-          className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 focus:border-indigo-500 focus:outline-none"
+          className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-700 focus:border-emerald-500 focus:outline-none"
         >
           <option value="">Set status…</option>
           {STATUS_OPTIONS.filter(o => o.value !== 'all').map(o => (
@@ -114,9 +115,9 @@ function BulkActionBar({ selected, leads, tenantId, onDone, stages, agents, isAd
               const v = e.target.value
               if (!v) return
               e.target.value = ''
-              run(lead => updateLead({ id: lead.id, tenant_id: tenantId, pipeline_stage_id: v || null }))
+              run(lead => updateLead({ id: lead.id, tenant_id: tenantId, pipeline_stage_id: v || null }).then(() => {}))
             }}
-            className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 focus:border-indigo-500 focus:outline-none"
+            className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-700 focus:border-emerald-500 focus:outline-none"
           >
             <option value="">Move to stage…</option>
             {stages.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -133,9 +134,9 @@ function BulkActionBar({ selected, leads, tenantId, onDone, stages, agents, isAd
               const v = e.target.value
               if (!v) return
               e.target.value = ''
-              run(lead => updateLead({ id: lead.id, tenant_id: tenantId, assigned_agent_id: v }))
+              run(lead => updateLead({ id: lead.id, tenant_id: tenantId, assigned_agent_id: v }).then(() => {}))
             }}
-            className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 focus:border-indigo-500 focus:outline-none"
+            className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-700 focus:border-emerald-500 focus:outline-none"
           >
             <option value="">Assign agent…</option>
             {agents.map(a => <option key={a.id} value={a.id}>{a.full_name ?? a.id}</option>)}
@@ -145,13 +146,10 @@ function BulkActionBar({ selected, leads, tenantId, onDone, stages, agents, isAd
         {isAdmin && (
           <button
             disabled={busy}
-            onClick={() => run('remove_assign', async () => {
-              const targets = leads.filter(l => selected.has(l.id))
-              await Promise.all(targets.map(l =>
-                updateLead({ id: l.id, tenant_id: tenantId, assigned_agent_id: null })
-              ))
-            })}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs font-medium text-gray-300 transition hover:bg-gray-700 hover:text-white disabled:opacity-50"
+            onClick={() => run(l =>
+              updateLead({ id: l.id, tenant_id: tenantId, assigned_agent_id: null }).then(() => {})
+            )}
+            className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-100 disabled:opacity-50"
           >
             Unassign
           </button>
@@ -172,7 +170,7 @@ function BulkActionBar({ selected, leads, tenantId, onDone, stages, agents, isAd
           Delete
         </button>
 
-        <div className="h-4 w-px bg-gray-700" />
+        <div className="h-4 w-px bg-gray-200" />
 
         {/* Close */}
         <button
@@ -195,12 +193,43 @@ function BulkActionBar({ selected, leads, tenantId, onDone, stages, agents, isAd
 
 type FilterTab = 'all' | 'aged'
 
+
+// ─── CSV Export ───────────────────────────────────────────────────────────────
+
+function exportToCSV(leads: Lead[]) {
+  const HEADERS = ['Date', 'Name', 'Phone', 'WhatsApp', 'Email', 'Status', 'Source', 'Follow-up', 'Notes']
+  const rows = leads.map(l => [
+    new Date(l.created_at).toLocaleDateString('en-IN'),
+    l.name,
+    l.phone ?? '',
+    l.whatsapp ?? '',
+    l.email ?? '',
+    l.status,
+    l.source ?? '',
+    l.followup_date ? new Date(l.followup_date).toLocaleDateString('en-IN') : '',
+    (l.notes ?? '').replace(/,/g, ';'),
+  ])
+  const csv = [HEADERS, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n')
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const url  = URL.createObjectURL(blob)
+  const a    = document.createElement('a')
+  a.href     = url
+  a.download = `leads_${new Date().toISOString().slice(0,10)}.csv`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 export function LeadsListPage() {
   const { profile, isRole } = useAuth()
+  const vocab = useVocab()
   const navigate    = useNavigate()
   const tenantId    = profile?.tenant_id ?? null
 
-  const [searchParams]  = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  // URL-driven filter param from dashboard cards and Lead Overview cards
+  const filterParam  = searchParams.get('filter')
+  const { filters: urlFilters, label: filterLabel } = resolveFilterParam(filterParam)
 
   const [search,  setSearch]  = useState('')
   const [status,  setStatus]  = useState<LeadStatus | 'all'>(() => {
@@ -213,10 +242,14 @@ export function LeadsListPage() {
   const [deleting,  setDeleting]  = useState<string | null>(null)
   const [deleteErr, setDeleteErr] = useState<string | null>(null)
 
-  const { leads, loading, error, refetch } = useLeads(tenantId, {
+  // Merge URL-driven filters with manual search/status — URL filter takes precedence
+  const activeFilters = {
+    ...urlFilters,
     search: search || undefined,
-    status: status === 'all' ? undefined : status,
-  })
+    status: !filterParam && status !== 'all' ? status : urlFilters.status,
+  }
+
+  const { leads, loading, error, refetch } = useLeads(tenantId, activeFilters)
   const { agents }  = useAgents(tenantId)
   const { stages }  = usePipelineStages(tenantId)
 
@@ -274,10 +307,20 @@ export function LeadsListPage() {
         {/* Header */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">Leads</h1>
+            <h1 className="text-xl font-semibold text-gray-900">
+              {filterParam ? filterLabel : 'Leads'}
+            </h1>
             <p className="mt-0.5 text-sm text-gray-500">
               {loading ? '…' : `${displayLeads.length} lead${displayLeads.length !== 1 ? 's' : ''}`}
               {tab === 'aged' && <span className="ml-1.5 text-rose-400 text-xs">• aged leads</span>}
+              {filterParam && (
+                <button
+                  onClick={() => setSearchParams({})}
+                  className="ml-2 text-xs font-semibold text-emerald-600 hover:text-emerald-800 transition"
+                >
+                  × Clear filter
+                </button>
+              )}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -293,13 +336,22 @@ export function LeadsListPage() {
               </button>
             )}
             <button
+              onClick={() => exportToCSV(displayLeads)}
+              className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 shadow-sm"
+            >
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>
+              Export CSV
+            </button>
+            <button
               onClick={() => navigate('/leads/new')}
               className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-sm"
             >
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
-              Add Lead
+              {vocab.addLead}
             </button>
           </div>
         </div>

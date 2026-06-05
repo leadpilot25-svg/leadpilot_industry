@@ -65,8 +65,8 @@ function Field({
   )
 }
 
-const inputCls = 'w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-const selectCls = 'w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+const inputCls = 'w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500'
+const selectCls = 'w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500'
 
 // ─── Form state type ─────────────────────────────────────────────────────────
 
@@ -260,7 +260,7 @@ export function WorkspaceSettingsPage() {
 
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-xl font-semibold text-white">Workspace settings</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Workspace settings</h1>
           <p className="mt-0.5 text-sm text-gray-500">
             Manage your company profile and preferences.
           </p>
@@ -269,14 +269,14 @@ export function WorkspaceSettingsPage() {
         <form onSubmit={handleSubmit} noValidate className="space-y-6">
 
           {/* ── Company section ────────────────────────────────────────── */}
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-6 space-y-5">
-            <h2 className="text-sm font-semibold text-white">Company</h2>
+          <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-6 space-y-5">
+            <h2 className="text-sm font-semibold text-gray-900">Company</h2>
 
             {/* Logo */}
             <div>
               <p className="block text-sm font-medium text-gray-300 mb-2">Company logo</p>
               <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-gray-700 bg-gray-800 overflow-hidden">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 overflow-hidden">
                   {logoPreview ? (
                     <img src={logoPreview} alt="Logo" className="h-full w-full object-contain" />
                   ) : (
@@ -289,7 +289,7 @@ export function WorkspaceSettingsPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-gray-700 hover:text-white"
+                    className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 shadow-sm"
                   >
                     {logoFile ? 'Change logo' : 'Upload logo'}
                   </button>
@@ -360,7 +360,7 @@ export function WorkspaceSettingsPage() {
               hint="Used for quick-dial links on lead detail pages."
             >
               <div className="flex rounded-lg shadow-sm">
-                <span className="inline-flex items-center rounded-l-lg border border-r-0 border-gray-700 bg-gray-700 px-3 text-sm text-gray-400">
+                <span className="inline-flex items-center rounded-l-lg border border-r-0 border-gray-200 bg-gray-100 px-3 text-sm text-gray-500">
                   +
                 </span>
                 <input
@@ -369,7 +369,7 @@ export function WorkspaceSettingsPage() {
                   value={form.whatsapp_number}
                   onChange={e => handleChange('whatsapp_number', e.target.value)}
                   placeholder="91 98765 43210"
-                  className="block w-full rounded-r-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="block w-full rounded-r-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 />
               </div>
             </Field>
@@ -386,7 +386,7 @@ export function WorkspaceSettingsPage() {
                   type="color"
                   value={form.brand_color}
                   onChange={e => handleChange('brand_color', e.target.value)}
-                  className="h-10 w-16 cursor-pointer rounded-lg border border-gray-700 bg-gray-800 p-1"
+                  className="h-10 w-16 cursor-pointer rounded-lg border border-gray-200 bg-white p-1"
                 />
                 <input
                   type="text"
@@ -394,15 +394,15 @@ export function WorkspaceSettingsPage() {
                   onChange={e => handleChange('brand_color', e.target.value)}
                   placeholder="#6366F1"
                   maxLength={7}
-                  className="w-32 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm font-mono text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-32 rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm font-mono text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 />
               </div>
             </Field>
           </div>
 
           {/* ── Regional section ───────────────────────────────────────── */}
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-6 space-y-5">
-            <h2 className="text-sm font-semibold text-white">Regional</h2>
+          <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-6 space-y-5">
+            <h2 className="text-sm font-semibold text-gray-900">Regional</h2>
 
             <Field id="timezone" label="Timezone">
               <select
@@ -439,7 +439,7 @@ export function WorkspaceSettingsPage() {
           )}
 
           {saveSuccess && (
-            <div className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
+            <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
@@ -447,18 +447,39 @@ export function WorkspaceSettingsPage() {
             </div>
           )}
 
-          {/* ── Custom fields shortcut ─────────────────────────────────── */}
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+          {/* ── Public form shortcut ──────────────────────────────────── */}
+          <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-sm font-semibold text-white">Custom fields</h2>
+                <h2 className="text-sm font-semibold text-gray-900">Public Form</h2>
+                <p className="mt-0.5 text-xs text-gray-500">
+                  Share a form link or QR code to capture leads from anywhere.
+                </p>
+              </div>
+              <Link
+                to="/settings/public-form"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 shadow-sm"
+              >
+                Build form
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+
+          {/* ── Custom fields shortcut ─────────────────────────────────── */}
+          <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-semibold text-gray-900">Custom fields</h2>
                 <p className="mt-0.5 text-xs text-gray-500">
                   Add extra fields to your lead forms for your industry.
                 </p>
               </div>
               <Link
                 to="/settings/custom-fields"
-                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-gray-700 hover:text-white"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 shadow-sm"
               >
                 Manage fields
                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -469,19 +490,40 @@ export function WorkspaceSettingsPage() {
           </div>
 
           {/* ── WhatsApp templates shortcut ────────────────────────────────── */}
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+          <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-sm font-semibold text-white">WhatsApp templates</h2>
+                <h2 className="text-sm font-semibold text-gray-900">WhatsApp templates</h2>
                 <p className="mt-0.5 text-xs text-gray-500">
                   Create reusable message templates for quick client outreach.
                 </p>
               </div>
               <Link
                 to="/settings/whatsapp-templates"
-                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-gray-700 hover:text-white"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 shadow-sm"
               >
                 Manage templates
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+
+          {/* ── Google Sheets shortcut ──────────────────────────────────────── */}
+          <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-semibold text-gray-900">Google Sheets sync</h2>
+                <p className="mt-0.5 text-xs text-gray-500">
+                  Back up every lead to a Google Sheet automatically.
+                </p>
+              </div>
+              <Link
+                to="/settings/google-sheets"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 shadow-sm"
+              >
+                Configure
                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
@@ -494,7 +536,7 @@ export function WorkspaceSettingsPage() {
             <button
               type="submit"
               disabled={saving || uploadingLogo || !form.company_name.trim()}
-              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {(saving || uploadingLogo) && (
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />

@@ -3,7 +3,7 @@ import type { DashboardStats } from '../../types/lead'
 
 // ─── Widget definition ────────────────────────────────────────────────────────
 
-export type AccentColor = 'indigo' | 'amber' | 'emerald' | 'rose' | 'sky' | 'violet' | 'orange'
+export type AccentColor = 'indigo' | 'amber' | 'emerald' | 'rose' | 'sky' | 'violet' | 'orange' | 'blue'
 
 export interface StatWidgetDef {
   key:     string
@@ -112,14 +112,14 @@ const INSURANCE_WIDGETS: StatWidgetDef[] = [
   {
     key:      'won_leads',
     label:    'Policies Issued',
-    accent:   'emerald',
+    accent:   'blue',
     href:     '/leads?status=won',
     getValue: s => s.won_leads,
     icon:     'won',
   },
   {
     key:      'followups',
-    label:    'Follow-ups Due',
+    label:    'Renewals Due',
     accent:   'rose',
     href:     '/followups',
     getValue: s => s.todays_followups,
@@ -130,7 +130,7 @@ const INSURANCE_WIDGETS: StatWidgetDef[] = [
 const TRAVEL_WIDGETS: StatWidgetDef[] = [
   {
     key:      'total_leads',
-    label:    'Total Inquiries',
+    label:    'New Inquiries',
     accent:   'emerald',
     href:     '/leads',
     getValue: s => s.total_leads,
@@ -138,8 +138,8 @@ const TRAVEL_WIDGETS: StatWidgetDef[] = [
   },
   {
     key:      'new_leads',
-    label:    'New Inquiries',
-    accent:   'amber',
+    label:    'Active Bookings',
+    accent:   'blue',
     href:     '/leads?status=new',
     getValue: s => s.new_leads,
     icon:     'new_leads',
@@ -165,15 +165,15 @@ const TRAVEL_WIDGETS: StatWidgetDef[] = [
 const TAROT_WIDGETS: StatWidgetDef[] = [
   {
     key:      'total_leads',
-    label:    'Total Clients',
-    accent:   'violet',
+    label:    'New Consultations',
+    accent:   'blue',
     href:     '/leads',
     getValue: s => s.total_leads,
     icon:     'leads',
   },
   {
     key:      'new_leads',
-    label:    'New Inquiries',
+    label:    'Sessions Scheduled',
     accent:   'amber',
     href:     '/leads?status=new',
     getValue: s => s.new_leads,
@@ -181,7 +181,7 @@ const TAROT_WIDGETS: StatWidgetDef[] = [
   },
   {
     key:      'won_leads',
-    label:    'Sessions Completed',
+    label:    'Readings Completed',
     accent:   'emerald',
     href:     '/leads?status=won',
     getValue: s => s.won_leads,
@@ -189,7 +189,7 @@ const TAROT_WIDGETS: StatWidgetDef[] = [
   },
   {
     key:      'followups',
-    label:    'Sessions Due Today',
+    label:    'Follow-ups Due',
     accent:   'rose',
     href:     '/followups',
     getValue: s => s.todays_followups,
@@ -200,7 +200,7 @@ const TAROT_WIDGETS: StatWidgetDef[] = [
 const COACH_WIDGETS: StatWidgetDef[] = [
   {
     key:      'total_leads',
-    label:    'Total Prospects',
+    label:    'New Leads',
     accent:   'emerald',
     href:     '/leads',
     getValue: s => s.total_leads,
@@ -208,15 +208,15 @@ const COACH_WIDGETS: StatWidgetDef[] = [
   },
   {
     key:      'new_leads',
-    label:    'New Inquiries',
-    accent:   'amber',
+    label:    'Discovery Calls',
+    accent:   'blue',
     href:     '/leads?status=new',
     getValue: s => s.new_leads,
     icon:     'new_leads',
   },
   {
     key:      'won_leads',
-    label:    'Students Joined',
+    label:    'Active Clients',
     accent:   'emerald',
     href:     '/leads?status=won',
     getValue: s => s.won_leads,
@@ -235,7 +235,7 @@ const COACH_WIDGETS: StatWidgetDef[] = [
 const EDUCATION_WIDGETS: StatWidgetDef[] = [
   {
     key:      'total_leads',
-    label:    'Total Students',
+    label:    'Student Inquiries',
     accent:   'emerald',
     href:     '/leads',
     getValue: s => s.total_leads,
@@ -259,7 +259,7 @@ const EDUCATION_WIDGETS: StatWidgetDef[] = [
   },
   {
     key:      'followups',
-    label:    'Counselling Due',
+    label:    'Follow-ups Due',
     accent:   'rose',
     href:     '/followups',
     getValue: s => s.todays_followups,
@@ -271,7 +271,7 @@ const TAXI_WIDGETS: StatWidgetDef[] = [
   {
     key:      'total_leads',
     label:    'Total Bookings',
-    accent:   'sky',
+    accent:   'blue',
     href:     '/leads',
     getValue: s => s.total_leads,
     icon:     'leads',
@@ -305,15 +305,15 @@ const TAXI_WIDGETS: StatWidgetDef[] = [
 const MARKETING_WIDGETS: StatWidgetDef[] = [
   {
     key:      'total_leads',
-    label:    'Total Clients',
-    accent:   'orange',
+    label:    'New Leads',
+    accent:   'emerald',
     href:     '/leads',
     getValue: s => s.total_leads,
     icon:     'leads',
   },
   {
     key:      'new_leads',
-    label:    'New Leads',
+    label:    'Proposals Sent',
     accent:   'amber',
     href:     '/leads?status=new',
     getValue: s => s.new_leads,
@@ -321,8 +321,8 @@ const MARKETING_WIDGETS: StatWidgetDef[] = [
   },
   {
     key:      'won_leads',
-    label:    'Contracts Signed',
-    accent:   'emerald',
+    label:    'Active Clients',
+    accent:   'blue',
     href:     '/leads?status=won',
     getValue: s => s.won_leads,
     icon:     'won',

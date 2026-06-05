@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import React, { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { supabase } from '../../lib/supabase'
@@ -139,25 +139,91 @@ export function CreateTenantWizard() {
       }
       if (!result.success) throw new Error(result.error ?? 'Tenant creation failed')
 
-      // Phase 2: Send magic link. When clicked, Supabase creates auth.users,
-      // handle_new_user trigger fires, reads the invitation row, and sets
-      // tenant_id + role = client_admin on the new profile automatically.
-      const { error: otpErr } = await supabase.auth.signInWithOtp({
-        email: form.admin_email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/accept-invite?token=${result.token}`,
-          shouldCreateUser: true,
-        },
-      })
+      // Phase 2: Send invitation email.
+      //
+      // Strategy: try Edge Function first (admin.inviteUserByEmail, no rate limit).
+      // If not deployed, fall back to signInWithOtp (works for new emails;
+      // rate-limited to 2/hr per address on free tier but fine for production use).
+      //
+      // Note: Supabase SMTP is confirmed working (password reset emails deliver).
 
-      if (otpErr) {
-        console.warn('Magic link not sent:', otpErr.message)
+      const acceptUrl = `${window.location.origin}/auth/accept-invite?token=${result.token}`
+      let emailSent   = false
+      let emailNote   = ''
+
+      console.log('[CreateTenant] Phase 2 starting. acceptUrl:', acceptUrl)
+      console.log('[CreateTenant] tenant_id:', result.tenant_id, 'token:', result.token)
+
+      // Try Edge Function
+      try {
+        console.log('[CreateTenant] Trying Edge Function send-invitation...')
+        const { data: fnData, error: fnError } = await supabase.functions.invoke(
+          'send-invitation',
+          {
+            body: {
+              email:        form.admin_email,
+              token:        result.token,
+              tenant_id:    result.tenant_id,
+              role:         'client_admin',
+              admin_name:   form.admin_name,
+              company_name: form.company_name,
+            },
+          }
+        )
+        console.log('[CreateTenant] Edge Function response — data:', fnData, 'error:', fnError)
+        const fnResult = fnData as { success?: boolean; error?: string } | null
+        if (!fnError && fnResult?.success) {
+          emailSent = true
+          console.log('[CreateTenant] Edge Function succeeded — email sent')
+        } else {
+          console.warn('[CreateTenant] Edge Function unavailable or failed, falling back to OTP.',
+            'fnError:', fnError?.message, 'fnResult:', fnResult)
+        }
+      } catch (efErr) {
+        console.warn('[CreateTenant] Edge Function threw:', efErr, '— falling back to OTP')
+      }
+
+      // Fallback: signInWithOtp (works when SMTP is configured, as confirmed by password reset)
+      if (!emailSent) {
+        console.log('[CreateTenant] Calling signInWithOtp for:', form.admin_email)
+        console.log('[CreateTenant] signInWithOtp options:', {
+          emailRedirectTo: acceptUrl,
+          shouldCreateUser: true,
+        })
+
+        const otpResult = await supabase.auth.signInWithOtp({
+          email: form.admin_email,
+          options: {
+            emailRedirectTo: acceptUrl,
+            shouldCreateUser: true,
+            data: {
+              tenant_id:        result.tenant_id,
+              role:             'client_admin',
+              invitation_token: result.token,
+            },
+          },
+        })
+
+        console.log('[CreateTenant] signInWithOtp FULL response:', JSON.stringify(otpResult))
+        console.log('[CreateTenant] signInWithOtp data:', otpResult.data)
+        console.log('[CreateTenant] signInWithOtp error:', otpResult.error)
+        console.log('[CreateTenant] signInWithOtp error message:', otpResult.error?.message)
+        console.log('[CreateTenant] signInWithOtp error status:', otpResult.error?.status)
+
+        if (otpResult.error) {
+          // OTP also failed — show manual link so the admin can share it directly
+          emailNote = ` ⚠️ Email could not be sent (${otpResult.error.message}). Share this link manually: ${acceptUrl}`
+          console.error('[CreateTenant] signInWithOtp FAILED:', otpResult.error)
+        } else {
+          emailSent = true
+          console.log('[CreateTenant] signInWithOtp succeeded — email queued by Supabase')
+        }
       }
 
       setSuccessMsg(
-        `Tenant "${form.company_name}" created. ` +
-        `Invitation sent to ${form.admin_email}. ` +
-        `If email is not configured, they can use Forgot Password to access their account.`
+        emailSent
+          ? `Tenant "${form.company_name}" created. Invitation email sent to ${form.admin_email}. They will receive a link to set their password.`
+          : `Tenant "${form.company_name}" created.${emailNote}`
       )
 
     } catch (err) {
@@ -239,8 +305,7 @@ export function CreateTenantWizard() {
 
         {/* Step content */}
         <div
-          className="rounded-2xl p-6 space-y-5"
-          className="rounded-2xl bg-white border border-gray-200 shadow-sm p-6 space-y-5"
+          className="rounded-2xl p-6 space-y-5 bg-white border border-gray-200 shadow-sm"
         >
 
           {/* Step 1 — Company */}
@@ -291,7 +356,7 @@ export function CreateTenantWizard() {
                 <input type="email" value={form.admin_email} onChange={e => set('admin_email', e.target.value)}
                   placeholder="priya@company.com" className={`${inputCls} ${borderNormal}`} />
               </Field>
-              <div className="rounded-xl p-4 text-sm text-slate-400" className="rounded-xl p-4 text-sm text-gray-600 bg-emerald-50 border border-emerald-100">
+              <div className="rounded-xl p-4 text-sm text-gray-600 bg-emerald-50 border border-emerald-100">
                 <p className="font-medium text-emerald-700 mb-1">What happens next</p>
                 <ul className="space-y-1 text-xs">
                   <li>• An invite email is sent to the client admin</li>
@@ -332,7 +397,7 @@ export function CreateTenantWizard() {
               </div>
 
               {/* Summary */}
-              <div className="rounded-xl p-4 space-y-1.5" className="rounded-xl p-4 space-y-1.5 bg-gray-50 border border-gray-100">
+              <div className="rounded-xl p-4 space-y-1.5 bg-gray-50 border border-gray-100">
                 <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Summary</p>
                 {[
                   ['Company',    form.company_name],

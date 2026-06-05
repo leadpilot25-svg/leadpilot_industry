@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { useLeads } from '../../hooks/useLeads'
@@ -82,6 +82,28 @@ function FeePaymentModal({ lead, onClose, onSave }: { lead: Lead; onClose: () =>
   )
 }
 
+
+// ─── Zero-state guidance card ─────────────────────────────────────────────────
+
+function GuidanceCard() {
+  return (
+    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center space-y-3">
+      <div className="text-3xl">🎓</div>
+      <div>
+        <p className="text-sm font-semibold text-amber-900">Track admissions and enrollments</p>
+        <p className="text-xs text-amber-700 mt-1 leading-relaxed">Add enrollment status and fee details to your leads to see admission progress and fee collection.</p>
+      </div>
+      <div className="rounded-xl border border-amber-200 bg-white px-3 py-2">
+        <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-wide mb-1">Custom fields to fill</p>
+        <p className="font-mono text-[11px] text-gray-600">enrollment_status, fee_paid, fee_quoted</p>
+      </div>
+      <p className="text-xs text-amber-600">
+        Go to <strong>Leads → Lead Detail</strong> and fill in these fields to unlock insights.
+      </p>
+    </div>
+  )
+}
+
 export function EducationWorkspace() {
   const { profile }  = useAuth()
   const navigate     = useNavigate()
@@ -143,7 +165,7 @@ export function EducationWorkspace() {
       <div className="px-4 py-6 sm:px-6 space-y-6">
 
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Education Workspace</h1>
+          <h1 className="text-xl font-semibold text-gray-900">My Business — Education</h1>
           <p className="mt-0.5 text-sm text-gray-500">Batch management, enrollment, and fee tracking</p>
         </div>
 
@@ -167,7 +189,7 @@ export function EducationWorkspace() {
                   const dropout = batch.members.filter(l => cd(l, 'enrollment_status') === 'Dropped Out').length
                   return (
                     <tr key={batch.name} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 text-sm font-medium text-white">{batch.name}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-gray-900">{batch.name}</td>
                       <td className="px-4 py-3 text-sm text-gray-700">{batch.total}</td>
                       <td className="px-4 py-3"><span className="text-sm font-medium text-emerald-400">{batch.enrolled}</span></td>
                       <td className="px-4 py-3"><span className="text-sm text-rose-400">{dropout}</span></td>
@@ -202,7 +224,7 @@ export function EducationWorkspace() {
                 <ul className="space-y-1.5">
                   {group.slice(0, 5).map(l => (
                     <li key={l.id}
-                      className="cursor-pointer rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 hover:border-gray-600 transition"
+                      className="cursor-pointer rounded-lg border border-gray-200 bg-white px-3 py-2 hover:border-emerald-300 transition"
                       onClick={() => navigate(`/leads/${l.id}`)}>
                       <p className="text-xs font-medium text-gray-900 truncate">{l.name}</p>
                       <p className="text-xs text-gray-500">{cd(l, 'course') || cd(l, 'batch') || ''}</p>
@@ -227,7 +249,7 @@ export function EducationWorkspace() {
                   return (
                     <tr key={lead.id} className="cursor-pointer transition-colors hover:bg-gray-50" onClick={() => navigate(`/leads/${lead.id}`)}>
                       <td className="px-4 py-3">
-                        <p className="text-sm font-medium text-white">{lead.name}</p>
+                        <p className="text-sm font-medium text-gray-900">{lead.name}</p>
                         <p className="text-xs text-gray-500">{lead.phone}</p>
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-700">{cd(lead, 'course') || '—'}</td>

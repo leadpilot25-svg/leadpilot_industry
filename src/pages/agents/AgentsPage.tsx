@@ -9,12 +9,12 @@ import type { Profile, Role } from '../../types/auth'
 
 const roleBg: Record<Role, string> = {
   super_admin:  'bg-purple-500/20',
-  client_admin: 'bg-indigo-500/20',
+  client_admin: 'bg-emerald-500/20',
   agent:        'bg-gray-500/20',
 }
 const roleText: Record<Role, string> = {
   super_admin:  'text-purple-400',
-  client_admin: 'text-indigo-400',
+  client_admin: 'text-emerald-600',
   agent:        'text-gray-400',
 }
 const roleLabel: Record<Role, string> = {
@@ -102,13 +102,13 @@ function InviteModal({ tenantId, profileId, onClose, onSuccess }: InviteModalPro
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-md rounded-2xl border border-gray-800 bg-gray-900 p-6">
+      <div className="w-full max-w-md rounded-2xl border border-gray-100 bg-white p-6">
 
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-base font-semibold text-white">Invite agent</h2>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-gray-500 transition hover:bg-gray-800 hover:text-white"
+            className="rounded-lg p-1.5 text-gray-500 transition hover:bg-gray-50 hover:text-white"
           >
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -128,11 +128,11 @@ function InviteModal({ tenantId, profileId, onClose, onSuccess }: InviteModalPro
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder="agent@company.com"
-              className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>
 
-          <div className="rounded-lg border border-gray-700 bg-gray-800/50 px-4 py-3">
+          <div className="rounded-lg border border-gray-200 bg-gray-50/50 px-4 py-3">
             <p className="text-xs text-gray-400">
               The agent will receive an email with a magic link to set their password and join your workspace as an <span className="font-medium text-white">Agent</span>.
             </p>
@@ -148,14 +148,14 @@ function InviteModal({ tenantId, profileId, onClose, onSuccess }: InviteModalPro
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-medium text-gray-300 transition hover:bg-gray-800 hover:text-white"
+              className="flex-1 rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting || !email.trim()}
-              className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {submitting && (
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
@@ -229,7 +229,7 @@ export function AgentsPage() {
           {canManage && (
             <button
               onClick={() => setShowInvite(true)}
-              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
+              className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700"
             >
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -256,11 +256,11 @@ export function AgentsPage() {
         )}
 
         {/* Agents table */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900">
+        <div className="rounded-2xl border border-gray-100 bg-white">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-800">
+                <tr className="border-b border-gray-100">
                   {['Name', 'Role', 'Status', 'Joined', canManage ? 'Actions' : ''].map((h, i) => (
                     <th key={i} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       {h}
@@ -275,7 +275,7 @@ export function AgentsPage() {
                   <tr key={i}>
                     {[50, 25, 20, 30, 20].map((w, j) => (
                       <td key={j} className="px-4 py-3">
-                        <div className="h-4 animate-pulse rounded bg-gray-800" style={{ width: `${w}%` }} />
+                        <div className="h-4 animate-pulse rounded bg-gray-50" style={{ width: `${w}%` }} />
                       </td>
                     ))}
                   </tr>
@@ -297,11 +297,11 @@ export function AgentsPage() {
 
                 {/* Rows */}
                 {!loading && agents.map(agent => (
-                  <tr key={agent.id} className="transition-colors hover:bg-gray-800/30">
+                  <tr key={agent.id} className="transition-colors hover:bg-gray-50/30">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         {/* Avatar initial */}
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-semibold text-indigo-400">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-xs font-semibold text-emerald-600">
                           {(agent.full_name ?? agent.user_id).charAt(0).toUpperCase()}
                         </div>
                         <div>
@@ -332,7 +332,7 @@ export function AgentsPage() {
                           <button
                             onClick={() => handleDisable(agent)}
                             disabled={disabling === agent.id}
-                            className="rounded-lg border border-gray-700 px-3 py-1 text-xs font-medium text-gray-400 transition hover:border-rose-500/40 hover:bg-rose-500/10 hover:text-rose-400 disabled:opacity-50"
+                            className="rounded-lg border border-gray-200 px-3 py-1 text-xs font-medium text-gray-400 transition hover:border-rose-500/40 hover:bg-rose-500/10 hover:text-rose-400 disabled:opacity-50"
                           >
                             {disabling === agent.id ? 'Disabling…' : 'Disable'}
                           </button>

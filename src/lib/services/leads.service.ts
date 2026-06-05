@@ -1,4 +1,6 @@
 import { supabase } from '../supabase'
+import { syncLeadToSheet } from './googleSheets.service'
+import type { LeadSyncPayload } from './googleSheets.service'
 import type { Lead, LeadStatus, LeadActivityType } from '../../types/lead'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -23,9 +25,20 @@ export interface UpdateLeadInput extends Partial<CreateLeadInput> {
 }
 
 export interface LeadFilters {
-  status?:  LeadStatus | 'all'
-  search?:  string
-  agentId?: string | 'all'
+  status?:         LeadStatus | 'all'
+  search?:         string
+  agentId?:        string | 'all'
+  // Date range filters on followup_date
+  followupFrom?:   string   // ISO date — inclusive lower bound
+  followupTo?:     string   // ISO date — inclusive upper bound
+  followupMissed?: boolean  // followup_date < today AND status not won/lost
+  // Outcome date filters on updated_at (for "won today/this month")
+  wonFrom?:        string   // ISO date
+  wonTo?:          string   // ISO date
+  // Pipeline stage
+  pipelineStageId?: string
+  // Active (non-terminal) statuses
+  activeOnly?:     boolean  // status IN new,contacted,qualified
 }
 
 // ─── Queries ──────────────────────────────────────────────────────────────────
@@ -45,6 +58,10 @@ export async function fetchLeads(
     query = query.eq('status', filters.status)
   }
 
+  if (filters.activeOnly) {
+    query = query.in('status', ['new', 'contacted', 'qualified'])
+  }
+
   if (filters.agentId && filters.agentId !== 'all') {
     query = query.eq('assigned_agent_id', filters.agentId)
   }
@@ -52,6 +69,34 @@ export async function fetchLeads(
   if (filters.search && filters.search.trim()) {
     const s = filters.search.trim()
     query = query.or(`name.ilike.%${s}%,email.ilike.%${s}%,phone.ilike.%${s}%`)
+  }
+
+  if (filters.followupFrom) {
+    query = query.gte('followup_date', filters.followupFrom)
+  }
+
+  if (filters.followupTo) {
+    query = query.lte('followup_date', filters.followupTo)
+  }
+
+  if (filters.followupMissed) {
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+    query = query
+      .lt('followup_date', todayStart.toISOString())
+      .in('status', ['new', 'contacted', 'qualified'])
+  }
+
+  if (filters.wonFrom) {
+    query = query.eq('status', 'won').gte('updated_at', filters.wonFrom)
+  }
+
+  if (filters.wonTo) {
+    query = query.lte('updated_at', filters.wonTo)
+  }
+
+  if (filters.pipelineStageId) {
+    query = query.eq('pipeline_stage_id', filters.pipelineStageId)
   }
 
   const { data, error } = await query
@@ -70,6 +115,31 @@ export async function fetchLeadById(id: string): Promise<Lead> {
 
   if (error) throw new Error(`Lead not found: ${error.message}`)
   return data as Lead
+}
+
+
+// ─── Build sync payload from a lead row ──────────────────────────────────────
+
+function buildSyncPayload(lead: Lead): LeadSyncPayload {
+  const custom = lead.custom_data as Record<string, string> | null ?? {}
+  return {
+    row_id:        lead.id,
+    date:          new Date(lead.created_at).toLocaleDateString('en-IN'),
+    name:          lead.name,
+    phone:         lead.phone         ?? lead.whatsapp ?? '',
+    email:         lead.email         ?? '',
+    city:          (custom.city as string) ?? '',
+    source:        lead.source        ?? 'manual',
+    status:        lead.status,
+    agent:         '',   // agent name not available here — sheet script can join if needed
+    notes:         lead.notes         ?? '',
+    followup_date: lead.followup_date
+                     ? new Date(lead.followup_date).toLocaleDateString('en-IN')
+                     : '',
+    ...Object.fromEntries(
+      Object.entries(custom).map(([k, v]) => [k, String(v ?? '')])
+    ),
+  }
 }
 
 export async function createLead(input: CreateLeadInput): Promise<Lead> {
@@ -93,7 +163,10 @@ export async function createLead(input: CreateLeadInput): Promise<Lead> {
     .single()
 
   if (error) throw new Error(`Failed to create lead: ${error.message}`)
-  return data as Lead
+  const lead = data as Lead
+  // Fire-and-forget sync — never blocks lead creation
+  syncLeadToSheet(lead.tenant_id, buildSyncPayload(lead))
+  return lead
 }
 
 export async function updateLead(input: UpdateLeadInput): Promise<Lead> {
@@ -120,7 +193,9 @@ export async function updateLead(input: UpdateLeadInput): Promise<Lead> {
     .single()
 
   if (error) throw new Error(`Failed to update lead: ${error.message}`)
-  return data as Lead
+  const lead = data as Lead
+  syncLeadToSheet(lead.tenant_id, buildSyncPayload(lead))
+  return lead
 }
 
 export async function softDeleteLead(id: string, tenantId: string): Promise<void> {
@@ -155,4 +230,106 @@ export async function logActivity(
     })
 
   if (error) throw new Error(`Failed to log activity: ${error.message}`)
+}
+
+// ─── URL filter param → LeadFilters ──────────────────────────────────────────
+//
+// Dashboard and Lead Overview cards link to /leads?filter=<key>.
+// This function translates the key into the matching LeadFilters object so
+// LeadsListPage only needs to call resolveFilterParam(param) and pass the result
+// to useLeads.
+
+export function resolveFilterParam(param: string | null): {
+  filters: LeadFilters
+  label:   string
+} {
+  const now        = new Date()
+  const todayStart = new Date(now); todayStart.setHours(0, 0, 0, 0)
+  const todayEnd   = new Date(now); todayEnd.setHours(23, 59, 59, 999)
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+
+  switch (param) {
+    // ── Today's follow-ups / pickups / meetings / sessions ──────────────
+    case 'today-followups':
+    case 'today-pickups':
+    case 'meetings-today':
+    case 'sessions-today':
+    case 'readings-today':
+    case 'site-visits-today':
+    case 'consultations-today':
+    case 'coaching-today':
+      return {
+        filters: {
+          followupFrom: todayStart.toISOString(),
+          followupTo:   todayEnd.toISOString(),
+        },
+        label: 'Today',
+      }
+
+    // ── Missed / overdue ─────────────────────────────────────────────────
+    case 'missed-followups':
+    case 'missed-pickups':
+      return {
+        filters: { followupMissed: true },
+        label: 'Missed follow-ups',
+      }
+
+    // ── Won outcomes ─────────────────────────────────────────────────────
+    case 'won-today':
+    case 'new-clients-today':
+    case 'policies-sold-today':
+    case 'properties-sold-today':
+    case 'completed-trips-today':
+    case 'enrollments-today':
+    case 'admissions-today':
+    case 'bookings-confirmed-today':
+    case 'sessions-booked-today':
+      return {
+        filters: {
+          status:  'won',
+          wonFrom: todayStart.toISOString(),
+          wonTo:   todayEnd.toISOString(),
+        },
+        label: 'Completed today',
+      }
+
+    // ── Won this month ────────────────────────────────────────────────────
+    case 'won-this-month':
+    case 'new-clients':
+    case 'policies-sold':
+    case 'properties-sold':
+    case 'completed-trips':
+    case 'enrollments':
+    case 'admissions':
+    case 'bookings-confirmed':
+    case 'sessions-booked':
+      return {
+        filters: {
+          status:  'won',
+          wonFrom: monthStart.toISOString(),
+        },
+        label: 'Closed this month',
+      }
+
+    // ── Active (open) leads ───────────────────────────────────────────────
+    case 'active-leads':
+    case 'active-clients':
+    case 'active-policies':
+    case 'active-buyers':
+    case 'active-students':
+    case 'active-bookings':
+    case 'active-trips':
+      return {
+        filters: { activeOnly: true },
+        label: 'Active',
+      }
+
+    // ── New / total ───────────────────────────────────────────────────────
+    case 'new-leads':
+      return { filters: { status: 'new' }, label: 'New' }
+
+    case 'all':
+    default:
+      return { filters: {}, label: 'All' }
+  }
 }

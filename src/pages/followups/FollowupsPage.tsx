@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useVocab } from '../../lib/services/industryVocab'
 import { useAuth } from '../../hooks/useAuth'
 import { supabase } from '../../lib/supabase'
 import { AppLayout } from '../../components/layout/AppLayout'
@@ -120,7 +121,7 @@ function useFollowupLeads(tenantId: string | null, tab: FilterTab) {
 // ─── Status badge ─────────────────────────────────────────────────────────────
 
 const statusBg: Record<LeadStatus, string> = {
-  new:         'bg-indigo-500/20',
+  new:         'bg-emerald-500/20',
   contacted:   'bg-blue-500/20',
   qualified:   'bg-amber-500/20',
   won:         'bg-emerald-500/20',
@@ -128,7 +129,7 @@ const statusBg: Record<LeadStatus, string> = {
   unqualified: 'bg-rose-500/20',
 }
 const statusText: Record<LeadStatus, string> = {
-  new:         'text-indigo-400',
+  new:         'text-emerald-600',
   contacted:   'text-blue-400',
   qualified:   'text-amber-400',
   won:         'text-emerald-400',
@@ -158,12 +159,12 @@ function FollowupRow({ lead, tab, onDone, completing }: RowProps) {
   const overdue  = tab !== 'completed' && isOverdue(lead.followup_date)
 
   return (
-    <tr className="transition-colors hover:bg-gray-800/30">
+    <tr className="transition-colors hover:bg-gray-50">
 
       {/* Lead name */}
       <td className="px-4 py-3">
         <button onClick={() => navigate(`/leads/${lead.id}`)} className="text-left">
-          <p className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
+          <p className="font-medium text-emerald-600 hover:text-indigo-300 transition-colors">
             {lead.name}
           </p>
           {lead.phone && (
@@ -216,7 +217,7 @@ function FollowupRow({ lead, tab, onDone, completing }: RowProps) {
             </button>
             <button
               onClick={() => navigate(`/leads/${lead.id}/edit`)}
-              className="rounded-lg border border-gray-700 px-3 py-1.5 text-xs font-medium text-gray-400 transition hover:bg-gray-700 hover:text-white"
+              className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:bg-gray-50 hover:text-gray-900"
             >
               Edit
             </button>
@@ -233,6 +234,7 @@ function FollowupRow({ lead, tab, onDone, completing }: RowProps) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export function FollowupsPage() {
+  const vocab = useVocab()
   const { profile }  = useAuth()
   const tenantId     = profile?.tenant_id ?? null
 
@@ -286,12 +288,12 @@ export function FollowupsPage() {
 
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-xl font-semibold text-white">Follow-ups</h1>
+          <h1 className="text-xl font-semibold text-gray-900">{vocab.followUp}s</h1>
           <p className="mt-0.5 text-sm text-gray-500">{today}</p>
         </div>
 
         {/* Tabs */}
-        <div className="mb-4 flex gap-1 rounded-lg border border-gray-800 bg-gray-900 p-1 w-fit">
+        <div className="mb-4 flex gap-1 rounded-xl border border-gray-200 bg-gray-100 p-1 w-fit">
           {tabs.map(t => (
             <button
               key={t.key}
@@ -299,8 +301,8 @@ export function FollowupsPage() {
               className={[
                 'rounded-md px-4 py-1.5 text-sm font-medium transition',
                 tab === t.key
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-gray-400 hover:text-white',
+                  ? 'bg-white text-emerald-700 shadow-sm border border-gray-200'
+                  : 'text-gray-500 hover:text-gray-800',
               ].join(' ')}
             >
               {t.label}
@@ -316,11 +318,11 @@ export function FollowupsPage() {
         )}
 
         {/* Table */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900">
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-800">
+                <tr className="border-b border-gray-100 bg-gray-50">
                   {['Lead', 'Status', 'Follow-up date', 'Notes', 'Action'].map((h, i) => (
                     <th key={i} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       {h}
@@ -334,7 +336,7 @@ export function FollowupsPage() {
                   <tr key={i}>
                     {[40, 20, 30, 40, 15].map((w, j) => (
                       <td key={j} className="px-4 py-3">
-                        <div className="h-4 animate-pulse rounded bg-gray-800" style={{ width: `${w}%` }} />
+                        <div className="h-4 animate-pulse rounded bg-gray-100" style={{ width: `${w}%` }} />
                       </td>
                     ))}
                   </tr>
@@ -343,7 +345,7 @@ export function FollowupsPage() {
                 {!loading && leads.length === 0 && (
                   <tr>
                     <td colSpan={5} className="px-4 py-16 text-center">
-                      <p className="text-sm text-gray-500">{emptyMessages[tab]}</p>
+                      <p className="text-sm text-gray-500">{emptyMessages[tab as FilterTab]}</p>
                       {tab !== 'completed' && (
                         <p className="mt-1 text-xs text-gray-600">
                           Set a follow-up date when editing a lead to see it here.
@@ -353,11 +355,11 @@ export function FollowupsPage() {
                   </tr>
                 )}
 
-                {!loading && leads.map(lead => (
+                {!loading && leads.map((lead: FollowupLead) => (
                   <FollowupRow
                     key={lead.id}
                     lead={lead}
-                    tab={tab}
+                    tab={tab as FilterTab}
                     onDone={handleDone}
                     completing={completing}
                   />
@@ -368,7 +370,7 @@ export function FollowupsPage() {
           </div>
 
           {!loading && leads.length > 0 && (
-            <div className="border-t border-gray-800 px-4 py-3">
+            <div className="border-t border-gray-100 px-4 py-3 bg-gray-50">
               <p className="text-xs text-gray-600">
                 {leads.length} lead{leads.length !== 1 ? 's' : ''}
               </p>

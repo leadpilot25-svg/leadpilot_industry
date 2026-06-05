@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import { Logo } from '../Logo'
 
 interface AdminLayoutProps { children: React.ReactNode }
 
@@ -38,16 +39,8 @@ function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => void })
 
         {/* Logo */}
         <div className="flex h-14 shrink-0 items-center gap-2.5 px-4 border-b border-gray-100">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-              <path d="M22 2L11 13" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-          <div>
-            <p className="text-[13px] font-bold text-gray-900">Lead<span className="text-emerald-500">Pilot</span></p>
-            <p className="text-[9px] font-semibold uppercase tracking-widest text-emerald-600">Platform Admin</p>
-          </div>
+          <Logo size="sm" />
+          <span className="text-[9px] font-semibold uppercase tracking-widest text-emerald-600 ml-0.5">Admin</span>
         </div>
 
         {/* Nav */}
@@ -96,7 +89,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <header className="flex h-14 shrink-0 items-center justify-between bg-white border-b border-gray-200 px-4 lg:hidden">
-          <span className="text-sm font-bold text-gray-900">Lead<span className="text-emerald-500">Pilot</span> <span className="text-xs font-normal text-gray-400">Admin</span></span>
+          <Logo size="sm" />
           <button onClick={() => setSidebarOpen(true)} className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 transition">
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
           </button>

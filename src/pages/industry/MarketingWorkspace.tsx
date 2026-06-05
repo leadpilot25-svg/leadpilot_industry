@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { useLeads } from '../../hooks/useLeads'
@@ -171,6 +171,28 @@ function UpdateRevenueModal({
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+
+// ─── Zero-state guidance card ─────────────────────────────────────────────────
+
+function GuidanceCard() {
+  return (
+    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center space-y-3">
+      <div className="text-3xl">📈</div>
+      <div>
+        <p className="text-sm font-semibold text-amber-900">Track clients and contracts</p>
+        <p className="text-xs text-amber-700 mt-1 leading-relaxed">Add contract details to your leads to see active clients, MRR, and upcoming renewals.</p>
+      </div>
+      <div className="rounded-xl border border-amber-200 bg-white px-3 py-2">
+        <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-wide mb-1">Custom fields to fill</p>
+        <p className="font-mono text-[11px] text-gray-600">contract_status, contract_value, contract_end</p>
+      </div>
+      <p className="text-xs text-amber-600">
+        Go to <strong>Leads → Lead Detail</strong> and fill in these fields to unlock insights.
+      </p>
+    </div>
+  )
+}
+
 export function MarketingWorkspace() {
   const { profile }  = useAuth()
   const navigate     = useNavigate()
@@ -243,7 +265,7 @@ export function MarketingWorkspace() {
 
         {/* Header */}
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Marketing Workspace</h1>
+          <h1 className="text-xl font-semibold text-gray-900">My Business — Marketing</h1>
           <p className="mt-0.5 text-sm text-gray-500">Campaign management, retainers, and revenue tracking</p>
         </div>
 
@@ -276,7 +298,7 @@ export function MarketingWorkspace() {
                     onClick={() => navigate(`/leads/${lead.id}`)}
                   >
                     <td className="px-4 py-3">
-                      <p className="text-sm font-medium text-white">{lead.name}</p>
+                      <p className="text-sm font-medium text-gray-900">{lead.name}</p>
                       <p className="text-xs text-gray-500">{cd(lead, 'industry') || lead.email || ''}</p>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-700">
@@ -345,7 +367,7 @@ export function MarketingWorkspace() {
                   className={`rounded px-2.5 py-1 text-xs font-medium transition ${
                     renewalDays === d
                       ? 'bg-emerald-600 text-white'
-                      : 'border border-gray-700 text-gray-400 hover:text-white'
+                      : 'border border-gray-200 text-gray-500 hover:text-gray-800'
                   }`}
                 >
                   {d}d
@@ -370,7 +392,7 @@ export function MarketingWorkspace() {
                       onClick={() => navigate(`/leads/${lead.id}`)}
                     >
                       <td className="px-4 py-3">
-                        <p className="text-sm font-medium text-white">{lead.name}</p>
+                        <p className="text-sm font-medium text-gray-900">{lead.name}</p>
                         <p className="text-xs text-gray-500">{cd(lead, 'industry') || ''}</p>
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-700">
@@ -422,7 +444,7 @@ export function MarketingWorkspace() {
           <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3 lg:grid-cols-4">
             {campaigns.map(([type, data]) => (
               <div key={type} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-                <p className="text-sm font-medium text-white truncate">{type}</p>
+                <p className="text-sm font-medium text-gray-900 truncate">{type}</p>
                 <p className="mt-1 text-2xl font-bold text-emerald-600">{data.count}</p>
                 <p className="text-xs text-gray-500 mt-0.5">{formatCurrency(data.value)}</p>
               </div>
@@ -458,7 +480,7 @@ export function MarketingWorkspace() {
                         onClick={() => navigate(`/leads/${lead.id}`)}
                       >
                         <td className="px-4 py-3">
-                          <p className="text-sm font-medium text-white">{lead.name}</p>
+                          <p className="text-sm font-medium text-gray-900">{lead.name}</p>
                           <p className="text-xs text-gray-500">{cd(lead, 'industry') || ''}</p>
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-700">
@@ -507,7 +529,7 @@ export function MarketingWorkspace() {
               <tbody className="divide-y divide-gray-100">
                 {!loading && managers.map(m => (
                   <tr key={m.name} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm font-medium text-white">{m.name}</td>
+                    <td className="px-4 py-3 text-sm font-medium text-gray-900">{m.name}</td>
                     <td className="px-4 py-3 text-sm text-gray-700">{m.clients}</td>
                     <td className="px-4 py-3">
                       <span className="text-sm font-medium text-emerald-400">{m.active}</span>
@@ -538,7 +560,7 @@ export function MarketingWorkspace() {
                   {group.slice(0, 4).map(l => (
                     <li
                       key={l.id}
-                      className="cursor-pointer rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 hover:border-gray-600 transition"
+                      className="cursor-pointer rounded-lg border border-gray-200 bg-white px-3 py-2 hover:border-emerald-300 transition"
                       onClick={() => navigate(`/leads/${l.id}`)}
                     >
                       <p className="text-xs font-medium text-gray-900 truncate">{l.name}</p>
