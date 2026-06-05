@@ -112,11 +112,15 @@ export function GoogleSheetsPage() {
   }
 
   const handleTest = async () => {
-    if (!scriptUrl.trim()) { setError('Enter the Script URL first'); return }
+    if (!tenantId || !scriptUrl.trim()) { setError('Enter the Script URL first'); return }
+    if (scriptUrl.trim() !== (status?.scriptUrl ?? '')) {
+      setError('Save your settings first, then test the connection.')
+      return
+    }
     setTesting(true); setTestResult(null); setError(null)
-    const result = await testSheetConnection(tenantId!)
+    const result = await testSheetConnection(tenantId)
     setTestResult(result.ok ? 'ok' : 'fail')
-    if (!result.ok) setError(`Connection failed: ${result.error}`)
+    if (!result.ok) setError(result.error ?? 'Connection failed')
     setTesting(false)
   }
 
