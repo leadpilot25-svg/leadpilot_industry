@@ -423,7 +423,7 @@ export function LeadDetailPage() {
               onChange={e => handleStatusChange(e.target.value)}
               className="flex-1 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none"
             >
-              {['new','contacted','qualified','proposal','won','lost'].map(s => (
+              {['new','contacted','qualified','won','lost','unqualified'].map(s => (
                 <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
               ))}
             </select>
