@@ -113,7 +113,7 @@ const router = createBrowserRouter([
       { path: '/settings/custom-fields',       element: <CustomFieldsPage /> },
       { path: '/settings/public-form',          element: <FormBuilderPage /> },
       { path: '/settings/templates',            element: <TemplatesPage /> },
-      { path: '/settings/whatsapp-templates',   element: <TemplatesPage /> },
+      { path: '/settings/whatsapp-templates',   element: <WhatsAppTemplatesPage /> },
       { path: '/settings/google-sheets',        element: <GoogleSheetsPage /> },
     ],
   },
