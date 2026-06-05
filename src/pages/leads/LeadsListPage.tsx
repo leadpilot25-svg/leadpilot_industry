@@ -115,13 +115,14 @@ function BulkActionBar({ selected, leads, tenantId, onDone, stages, agents, isAd
               const v = e.target.value
               if (!v) return
               e.target.value = ''
-              run(lead => updateLead({ id: lead.id, tenant_id: tenantId, pipeline_stage_id: v || null }).then(() => {}))
+              const stageId = v === '__clear__' ? null : v
+              run(lead => updateLead({ id: lead.id, tenant_id: tenantId, pipeline_stage_id: stageId }).then(() => {}))
             }}
             className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-700 focus:border-emerald-500 focus:outline-none"
           >
             <option value="">Move to stage…</option>
             {stages.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-            <option value="">— Clear stage</option>
+            <option value="__clear__">— Clear stage</option>
           </select>
         )}
 
