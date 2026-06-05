@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useVocab } from '../../lib/services/industryVocab'
 import { useAuth } from '../../hooks/useAuth'
 import { supabase } from '../../lib/supabase'
@@ -8,7 +8,7 @@ import type { Lead, LeadStatus } from '../../types/lead'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type FilterTab = 'today' | 'upcoming' | 'completed'
+type FilterTab = 'today' | 'overdue' | 'upcoming' | 'completed'
 
 // Shape we care about from the leads table
 interface FollowupLead {
@@ -88,6 +88,12 @@ function useFollowupLeads(tenantId: string | null, tab: FilterTab) {
           // Has a followup date after today AND is not in a terminal status
           query = query
             .gte('followup_date', tomorrowStart())
+            .not('status', 'in', `(${TERMINAL_STATUSES.join(',')})`)
+            .order('followup_date', { ascending: true })
+        } else if (tab === 'overdue') {
+          // Leads whose follow-up date has passed but haven't been won or lost
+          query = query
+            .lt('followup_date', todayStart())
             .not('status', 'in', `(${TERMINAL_STATUSES.join(',')})`)
             .order('followup_date', { ascending: true })
         } else {
@@ -238,7 +244,10 @@ export function FollowupsPage() {
   const { profile }  = useAuth()
   const tenantId     = profile?.tenant_id ?? null
 
-  const [tab,        setTab]        = useState<FilterTab>('today')
+  const [searchParams] = useSearchParams()
+  const [tab, setTab] = useState<FilterTab>(
+    searchParams.get('tab') === 'overdue' ? 'overdue' : 'today'
+  )
   const [completing, setCompleting] = useState<string | null>(null)
   const [actionErr,  setActionErr]  = useState<string | null>(null)
 
@@ -268,6 +277,7 @@ export function FollowupsPage() {
 
   const tabs: { key: FilterTab; label: string }[] = [
     { key: 'today',     label: 'Today'     },
+    { key: 'overdue',   label: 'Overdue'   },
     { key: 'upcoming',  label: 'Upcoming'  },
     { key: 'completed', label: 'Completed' },
   ]
@@ -278,6 +288,7 @@ export function FollowupsPage() {
 
   const emptyMessages: Record<FilterTab, string> = {
     today:     'No follow-ups scheduled for today.',
+    overdue:   'No overdue follow-ups.',
     upcoming:  'No upcoming follow-ups.',
     completed: 'No won or lost leads with a follow-up date yet.',
   }
